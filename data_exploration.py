@@ -5,3 +5,5 @@ import numpy as np
 data = pd.read_csv('data/data.csv')
 
 print(data.columns)
+print(data.cov())
+print(data.describe())
