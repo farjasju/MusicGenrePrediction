@@ -8,7 +8,7 @@ print(data.columns)
 print(data.cov())
 print(data.describe())
 
-//Geting the correlation matrix
+#Geting the correlation matrix
 f = plt.figure(figsize=(19, 15))
 plt.matshow(df.corr(), fignum=f.number)
 plt.xticks(range(df.shape[1]), df.columns, fontsize=10, rotation=90)
