@@ -1,6 +1,7 @@
 import os
 
 import matplotlib.pyplot as plt
+from matplotlib import colors as pltclrs
 import pandas as pd
 import numpy as np
 
@@ -88,12 +89,17 @@ def main():
 
     # PCA
     projected = pca(x, 2)
+    label = [x//100 for x in range(1000)]
+    colors = ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']
     plt.scatter(projected[:, 0], projected[:, 1],
-            c=y, edgecolor='none', alpha=0.5,
-            cmap=plt.cm.get_cmap('spectral', 10))
+            c=label, edgecolor='none', alpha=0.5,
+            cmap=pltclrs.ListedColormap(colors))
+    cb = plt.colorbar()
+    loc = np.arange(0,max(label),max(label)/float(len(colors)))
+    cb.set_ticks(loc)
+    cb.set_ticklabels(colors)
     plt.xlabel('component 1')
     plt.ylabel('component 2')
-    plt.colorbar()
     plt.show()
 
 if __name__ == "__main__":
