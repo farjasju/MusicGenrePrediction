@@ -8,7 +8,47 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
 
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+
 import seaborn as sns
+
+def optimal_components(x, y, goal_var: float) -> int:
+    lda = LDA(n_components=None)
+    X_lda = lda.fit(x, y)
+
+    # Create array of explained variance ratios
+    lda_var_ratios = lda.explained_variance_ratio_
+    print(lda_var_ratios)
+
+    # Set initial variance explained so far
+    total_variance = 0.0
+    
+    # Set initial number of features
+    n_components = 0
+    
+    # For the explained variance of each feature:
+    for explained_variance in lda_var_ratios:
+        
+        # Add the explained variance to the total
+        total_variance += explained_variance
+        
+        # Add one to the number of components
+        n_components += 1
+        
+        # If we reach our goal level of explained variance
+        if total_variance >= goal_var:
+            # End the loop
+            break
+    
+    print('The optimal number of components for this dataset is ', n_components, ' components.')
+    # Return the number of components
+    return n_components
 
 def correlation_threshold_removal(dataset, threshold):
     '''Removes the columns above a certain level of correlation'''
@@ -52,8 +92,53 @@ def main():
     data = pd.read_csv("./data/data.csv")
     data.drop(['filename'],axis=1, inplace=True)
     
-    x = data.iloc[:,1:-1]
-    y = data.iloc[:,-1]
+    x = data.iloc[:,1:-1].values
+    y = data.iloc[:,-1].values
+
+    num_comp = optimal_components(x,y,0.95)
+
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    # sc = StandardScaler()
+    # X_train = sc.fit_transform(X_train)
+    # X_test = sc.transform(X_test)
+
+    lda = LDA(n_components=num_comp)
+    X_lda = lda.fit_transform(x, y)
+    y_label = le.fit_transform(data['label'])
+
+    for i in range(0, num_comp-1):
+        plt.scatter(
+        X_lda[:,i],
+        X_lda[:,i+1],
+        c=y_label,
+        cmap='rainbow',
+        alpha=0.7,
+        edgecolors='b'
+        )
+        plt.savefig(os.path.join('results', 'projection matrix ' + str(i) + '.png'))
+    
+
+    # lda = LDA(n_components=100)
+    # X_train = lda.fit_transform(X_train, y_train)
+    # X_test = lda.transform(X_test)
+
+    # classifier = RandomForestClassifier(max_depth=2, random_state=0)
+
+    # classifier.fit(X_train, y_train)
+    # y_pred = classifier.predict(X_test)
+
+    # cm = confusion_matrix(y_test, y_pred)
+    # print(cm)
+    # print('Accuracy' + str(accuracy_score(y_test, y_pred)))
+
+    # colors = ['navy', 'turquoise', 'darkorange']
+
+    # for color, i, target_name in zip(colors, [0, 1, 2], target_names):
+    #     plt.scatter(X_r2[y == i, 0], X_r2[y == i, 1], alpha=.8, color=color, label=target_name)
+    # plt.legend(loc='best', shadow=False, scatterpoints=1)
+    # plt.title('LDA of IRIS dataset')
+
+    # plt.show()
 
     # Plotting the distributions
     for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
