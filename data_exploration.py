@@ -117,8 +117,21 @@ def main():
     
     x = data.iloc[:,1:-1].values
     y = data.iloc[:,-1].values
-    
-    LDAwithGraphics(x,y, data)
+
+    ##Outlier removal - interquantil distance because our variables are mostly normal
+    Q1 = data.quantile(0.25)
+    Q3 = data.quantile(0.75)
+    IQR = Q3 - Q1
+    print(IQR)
+
+    data_out = data[~((data < (Q1 - 1.5 * IQR)) |(data > (Q3 + 1.5 * IQR))).any(axis=1)]
+    print('Shape of dataset before outlier removal: ', data.shape)
+    print('Shape of dataset before outlier removal: ', data_out.shape)
+
+    x_out = data_out.iloc[:,1:-1].values
+    y_out = data_out.iloc[:,-1].values
+
+    LDAwithGraphics(x_out,y_out, data_out)
 
     # X_train = lda.fit_transform(X_train, y_train)
     # X_test = lda.transform(X_test)
