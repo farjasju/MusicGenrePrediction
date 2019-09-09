@@ -9,11 +9,6 @@ from sklearn.decomposition import PCA
 
 import seaborn as sns
 
-le = LabelEncoder()
-data = pd.read_csv("./data/data.csv")
-x = data.iloc[:,1:-1]
-y = data.iloc[:,-1]
-
 def correlation_threshold_removal(dataset, threshold):
     '''Removes the columns above a certain level of correlation'''
     col_corr = set() # Set of all the names of deleted columns
@@ -50,15 +45,27 @@ def distribution_plot(data, filename='output'):
     plt.clf()
     
 def main():
+
+    le = LabelEncoder()
+    data = pd.read_csv("./data/data.csv")
+    x = data.iloc[:,1:-1]
+    y = data.iloc[:,-1]
+    
     # Plotting the distributions
     for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
        'spectral_centroid', 'spectral_bandwidth', 'rolloff',
        'zero_crossing_rate']:
         distribution_plot(data[var_name], var_name)
 
-    data['label'] = le.fit_transform(data['label'].astype('str'))
-    le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
-    print('\nLabel transformations:', le_name_mapping, '\n')
+    # data['label'] = le.fit_transform(data['label'].astype('str'))
+    # le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
+    # print('\nLabel transformations:', le_name_mapping, '\n')
+
+    # use pd.concat to join the new columns with your original dataframe
+    data = pd.concat([data,pd.get_dummies(data['label'], prefix='label')],axis=1)
+
+    # now drop the original 'country' column (you don't need it anymore)
+    data.drop(['label'],axis=1, inplace=True)
 
     print(data.columns)
     print(data.cov())
