@@ -7,7 +7,6 @@ import numpy as np
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
-
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
@@ -99,6 +98,38 @@ def LDAwithGraphics(x,y,data):
     X_lda = lda.fit_transform(x, y)
     y_label = le.fit_transform(data['label'])
 
+    plt.figure(figsize=(10,8))
+    for lab, col in zip(('blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'), ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']):
+        plt.scatter(
+            X_lda[y == lab,0],
+            X_lda[y == lab,1],
+            c=col,
+            label=lab,
+            alpha=0.7
+            )
+    plt.xlabel('component 1')
+    plt.ylabel('component 2')
+    plt.title('LDA - First axis')
+    plt.legend()
+    plt.savefig(os.path.join('results', 'projection_matrix_first_axis.png'))
+    plt.clf()
+
+    plt.figure(figsize=(10,8))
+    for lab, col in zip(('blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'), ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']):
+        plt.scatter(
+            X_lda[y == lab,0],
+            X_lda[y == lab,2],
+            c=col,
+            label=lab,
+            alpha=0.7
+            )
+    plt.xlabel('component 1')
+    plt.ylabel('component 3')
+    plt.title('LDA - Second axis')
+    plt.legend()
+    plt.savefig(os.path.join('results', 'projection_matrix_second_axis.png'))
+    plt.clf()
+
     for i in range(0, num_comp-1):
         plt.scatter(
         X_lda[:,i],
@@ -109,6 +140,8 @@ def LDAwithGraphics(x,y,data):
         edgecolors='b'
         )
         plt.savefig(os.path.join('results', 'projection matrix ' + str(i) + '.png'))
+
+    return lda
 
 def main():
     le = LabelEncoder()
@@ -122,7 +155,7 @@ def main():
     Q1 = data.quantile(0.25)
     Q3 = data.quantile(0.75)
     IQR = Q3 - Q1
-    print(IQR)
+    print("IQR:", IQR)
 
     data_out = data[~((data < (Q1 - 1.5 * IQR)) |(data > (Q3 + 1.5 * IQR))).any(axis=1)]
     print('Shape of dataset before outlier removal: ', data.shape)
@@ -131,7 +164,6 @@ def main():
     x_out = data_out.iloc[:,1:-1].values
     y_out = data_out.iloc[:,-1].values
 
-    LDAwithGraphics(x_out,y_out, data_out)
     ##########################
 
     # X_train = lda.fit_transform(X_train, y_train)
@@ -155,13 +187,16 @@ def main():
        'mfcc20']:
         distribution_plot(data[var_name], var_name)
 
+    lda = LDAwithGraphics(x_out,y_out, data_out)
+    # LDAwithGraphics(x, y, data)
+    print(lda.explained_variance_ratio_)
 
-##Label encoding
+    ##Label encoding
     # data['label'] = le.fit_transform(data['label'].astype('str'))
     # le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
     # print('\nLabel transformations:', le_name_mapping, '\n')
 
-##One hot encoding
+    ##One hot encoding
     # use pd.concat to join the new columns with your original dataframe
     data = pd.concat([data,pd.get_dummies(data['label'], prefix='label')],axis=1)
 
@@ -173,7 +208,7 @@ def main():
     print(data.describe())
     print(data.corr())
 
-####################
+    ####################
 
     correlation_matrix(data, 'before threshold removal')
 
@@ -184,19 +219,19 @@ def main():
     correlation_matrix(data, 'after threshold removal')
 
     # PCA
-    projected = pca(x, 2)
-    label = [x//100 for x in range(1000)]
-    colors = ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']
-    plt.scatter(projected[:, 0], projected[:, 1],
-            c=label, edgecolor='none', alpha=0.5,
-            cmap=pltclrs.ListedColormap(colors))
-    cb = plt.colorbar()
-    loc = np.arange(0,max(label),max(label)/float(len(colors)))
-    cb.set_ticks(loc)
-    cb.set_ticklabels(colors)
-    plt.xlabel('component 1')
-    plt.ylabel('component 2')
-    plt.show()
+    # projected = pca(x, 2)
+    # label = [x//100 for x in range(1000)]
+    # colors = ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']
+    # plt.scatter(projected[:, 0], projected[:, 1],
+    #         c=label, edgecolor='none', alpha=0.5,
+    #         cmap=pltclrs.ListedColormap(colors))
+    # cb = plt.colorbar()
+    # loc = np.arange(0,max(label),max(label)/float(len(colors)))
+    # cb.set_ticks(loc)
+    # cb.set_ticklabels(colors)
+    # plt.xlabel('component 1')
+    # plt.ylabel('component 2')
+    # plt.show()
 
 if __name__ == "__main__":
     main()
