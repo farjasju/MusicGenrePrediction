@@ -118,7 +118,7 @@ def main():
     x = data.iloc[:,1:-1].values
     y = data.iloc[:,-1].values
 
-    ##Outlier removal - interquantil distance because our variables are mostly normal
+    ##Outlier removal - using interquantil distance, because our variables follow a mostly normal distribution
     Q1 = data.quantile(0.25)
     Q3 = data.quantile(0.75)
     IQR = Q3 - Q1
@@ -132,6 +132,7 @@ def main():
     y_out = data_out.iloc[:,-1].values
 
     LDAwithGraphics(x_out,y_out, data_out)
+    ##########################
 
     # X_train = lda.fit_transform(X_train, y_train)
     # X_test = lda.transform(X_test)
@@ -154,10 +155,13 @@ def main():
        'mfcc20']:
         distribution_plot(data[var_name], var_name)
 
+
+##Label encoding
     # data['label'] = le.fit_transform(data['label'].astype('str'))
     # le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
     # print('\nLabel transformations:', le_name_mapping, '\n')
 
+##One hot encoding
     # use pd.concat to join the new columns with your original dataframe
     data = pd.concat([data,pd.get_dummies(data['label'], prefix='label')],axis=1)
 
@@ -168,6 +172,8 @@ def main():
     print(data.cov())
     print(data.describe())
     print(data.corr())
+
+####################
 
     correlation_matrix(data, 'before threshold removal')
 
