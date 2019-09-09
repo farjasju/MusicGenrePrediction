@@ -30,8 +30,9 @@ def correlation_threshold_removal(dataset, threshold):
 
 def pca(dataset, n_components=None):
     pca = PCA(n_components=n_components)
-    pca.fit(dataset.to_numpy())
-    print(pca.explained_variance_ratio_) 
+    projected = pca.fit_transform(dataset.to_numpy())
+    print(pca.explained_variance_ratio_)
+    return projected
 
 def correlation_matrix(data):
     f = plt.figure(figsize=(19, 15))
@@ -43,17 +44,20 @@ def correlation_matrix(data):
     plt.show()
 
 def distribution_plot(data, filename='output'):
-    sns.set(color_codes=True)
+    #sns.set(color_codes=True)
     plot = sns.distplot(data)
     fig = plot.get_figure()
     fig.savefig(os.path.join('results',filename + '_distribution.png'))
     plt.clf()
-    
+
 def main():
     # Plotting the distributions
     for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
        'spectral_centroid', 'spectral_bandwidth', 'rolloff',
-       'zero_crossing_rate']:
+       'zero_crossing_rate', 'mfcc1', 'mfcc2', 'mfcc3', 'mfcc4', 'mfcc5',
+       'mfcc6', 'mfcc7', 'mfcc8', 'mfcc9', 'mfcc10', 'mfcc11', 'mfcc12',
+       'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
+       'mfcc20']:
         distribution_plot(data[var_name], var_name)
 
     data['label'] = le.fit_transform(data['label'].astype('str'))
@@ -72,7 +76,14 @@ def main():
     correlation_matrix(data)
 
     # PCA
-    pca(x, 4)
+    projected = pca(x, 2)
+    plt.scatter(projected[:, 0], projected[:, 1],
+            c=y, edgecolor='none', alpha=0.5,
+            cmap=plt.cm.get_cmap('spectral', 10))
+    plt.xlabel('component 1')
+    plt.ylabel('component 2')
+    plt.colorbar()
+    plt.show()
 
 if __name__ == "__main__":
     main()
