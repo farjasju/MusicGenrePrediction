@@ -97,49 +97,68 @@ def LDAwithGraphics(x,y,data):
     lda = LDA(n_components=num_comp)
     X_lda = lda.fit_transform(x, y)
     y_label = le.fit_transform(data['label'])
+    for i in range(0, num_comp):
+        for j in range(0, num_comp):
+            if (i != j):
+                plt.figure(figsize=(10,8))
+                for lab, col in zip(('blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'), ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']):
+                    plt.scatter(
+                        X_lda[y == lab,i],
+                        X_lda[y == lab,j],
+                        c=col,
+                        label=lab,
+                        alpha=0.7
+                        )
+                plt.xlabel('component'+str(i))
+                plt.ylabel('component'+str(j))
+                plt.title('LDA')
+                plt.legend()
+                plt.savefig(os.path.join('results', 'projection_matrix_'+str(i)+'_'+str(j)+'.png'))
+                plt.clf()
 
-    plt.figure(figsize=(10,8))
-    for lab, col in zip(('blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'), ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']):
-        plt.scatter(
-            X_lda[y == lab,0],
-            X_lda[y == lab,1],
-            c=col,
-            label=lab,
-            alpha=0.7
-            )
-    plt.xlabel('component 1')
-    plt.ylabel('component 2')
-    plt.title('LDA - First axis')
-    plt.legend()
-    plt.savefig(os.path.join('results', 'projection_matrix_first_axis.png'))
-    plt.clf()
 
-    plt.figure(figsize=(10,8))
-    for lab, col in zip(('blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'), ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']):
-        plt.scatter(
-            X_lda[y == lab,0],
-            X_lda[y == lab,2],
-            c=col,
-            label=lab,
-            alpha=0.7
-            )
-    plt.xlabel('component 1')
-    plt.ylabel('component 3')
-    plt.title('LDA - Second axis')
-    plt.legend()
-    plt.savefig(os.path.join('results', 'projection_matrix_second_axis.png'))
-    plt.clf()
+    # plt.figure(figsize=(10,8))
+    # for lab, col in zip(('blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'), ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']):
+    #     plt.scatter(
+    #         X_lda[y == lab,0],
+    #         X_lda[y == lab,1],
+    #         c=col,
+    #         label=lab,
+    #         alpha=0.7
+    #         )
+    # plt.xlabel('component 1')
+    # plt.ylabel('component 2')
+    # plt.title('LDA - First axis')
+    # plt.legend()
+    # plt.savefig(os.path.join('results', 'projection_matrix_first_axis.png'))
+    # plt.clf()
 
-    for i in range(0, num_comp-1):
-        plt.scatter(
-        X_lda[:,i],
-        X_lda[:,i+1],
-        c=y_label,
-        cmap='rainbow',
-        alpha=0.7,
-        edgecolors='b'
-        )
-        plt.savefig(os.path.join('results', 'projection matrix ' + str(i) + '.png'))
+    # plt.figure(figsize=(10,8))
+    # for lab, col in zip(('blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'), ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']):
+    #     plt.scatter(
+    #         X_lda[y == lab,0],
+    #         X_lda[y == lab,2],
+    #         c=col,
+    #         label=lab,
+    #         alpha=0.7
+    #         )
+    # plt.xlabel('component 1')
+    # plt.ylabel('component 3')
+    # plt.title('LDA - Second axis')
+    # plt.legend()
+    # plt.savefig(os.path.join('results', 'projection_matrix_second_axis.png'))
+    # plt.clf()
+
+    # for i in range(0, num_comp-1):
+    #     plt.scatter(
+    #     X_lda[:,i],
+    #     X_lda[:,i+1],
+    #     c=y_label,
+    #     cmap='rainbow',
+    #     alpha=0.7,
+    #     edgecolors='b'
+    #     )
+    #     plt.savefig(os.path.join('results', 'projection matrix ' + str(i) + '.png'))
 
     return lda
 
