@@ -28,14 +28,14 @@ def pca(dataset, n_components=None):
     pca.fit(dataset.to_numpy())
     print(pca.explained_variance_ratio_) 
 
-def correlation_matrix(data):
+def correlation_matrix(data, filename='output'):
     f = plt.figure(figsize=(19, 15))
     plt.matshow(data.corr(), fignum=f.number)
     plt.xticks(range(data.shape[1]), data.columns, fontsize=10, rotation=90)
     plt.yticks(range(data.shape[1]), data.columns, fontsize=10)
     cb = plt.colorbar()
     cb.ax.tick_params(labelsize=12)
-    plt.show()
+    plt.savefig(os.path.join('results', 'correlation matrix ' + filename + '_distribution.png'))
 
 def distribution_plot(data, filename='output'):
     sns.set(color_codes=True)
@@ -48,9 +48,11 @@ def main():
 
     le = LabelEncoder()
     data = pd.read_csv("./data/data.csv")
+    data.drop(['filename'],axis=1, inplace=True)
+    
     x = data.iloc[:,1:-1]
     y = data.iloc[:,-1]
-    
+
     # Plotting the distributions
     for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
        'spectral_centroid', 'spectral_bandwidth', 'rolloff',
@@ -72,11 +74,13 @@ def main():
     print(data.describe())
     print(data.corr())
 
+    correlation_matrix(data, 'before threshold removal')
+
     # Deleting columns with correlation >= 0.8. The data above is before the removal, and the graph below is after
     correlation_threshold_removal(data, 0.8)
 
     # Getting the correlation matrix
-    correlation_matrix(data)
+    correlation_matrix(data, 'after threshold removal')
 
     # PCA
     pca(x, 4)
