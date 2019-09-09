@@ -155,11 +155,11 @@ def main():
     Q1 = data.quantile(0.25)
     Q3 = data.quantile(0.75)
     IQR = Q3 - Q1
-    print("IQR:", IQR)
+    # print("IQR:", IQR)
 
     data_out = data[~((data < (Q1 - 1.5 * IQR)) |(data > (Q3 + 1.5 * IQR))).any(axis=1)]
-    print('Shape of dataset before outlier removal: ', data.shape)
-    print('Shape of dataset before outlier removal: ', data_out.shape)
+    # print('Shape of dataset before outlier removal: ', data.shape)
+    # print('Shape of dataset before outlier removal: ', data_out.shape)
 
     x_out = data_out.iloc[:,1:-1].values
     y_out = data_out.iloc[:,-1].values
@@ -186,6 +186,11 @@ def main():
        'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
        'mfcc20']:
         distribution_plot(data[var_name], var_name)
+
+    comp_x = [1,2,3,4,5,6,7]
+    comp_h = [0.39899075,0.2409215,0.11481741,0.10215124,0.04666102,0.03713209, 0.03028714]
+    plt.bar(comp_x, height=comp_h)
+    plt.show()
 
     lda = LDAwithGraphics(x_out,y_out, data_out)
     # LDAwithGraphics(x, y, data)
