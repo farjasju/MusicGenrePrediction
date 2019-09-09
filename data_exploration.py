@@ -1,8 +1,13 @@
+import os
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
+
+import seaborn as sns
 
 le = LabelEncoder()
 data = pd.read_csv("./data/data.csv")
@@ -37,7 +42,20 @@ def correlation_matrix(data):
     cb.ax.tick_params(labelsize=12)
     plt.show()
 
+def distribution_plot(data, filename='output'):
+    sns.set(color_codes=True)
+    plot = sns.distplot(data)
+    fig = plot.get_figure()
+    fig.savefig(os.path.join('results',filename + '_distribution.png'))
+    plt.clf()
+    
 def main():
+    # Plotting the distributions
+    for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
+       'spectral_centroid', 'spectral_bandwidth', 'rolloff',
+       'zero_crossing_rate']:
+        distribution_plot(data[var_name], var_name)
+
     data['label'] = le.fit_transform(data['label'].astype('str'))
     le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
     print('\nLabel transformations:', le_name_mapping, '\n')
