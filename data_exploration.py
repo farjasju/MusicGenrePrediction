@@ -86,15 +86,8 @@ def distribution_plot(data, filename='output'):
     fig.savefig(os.path.join('results',filename + '_distribution.png'))
     plt.clf()
 
-def main():
-
+def LDAwithGraphics(x,y,data):
     le = LabelEncoder()
-    data = pd.read_csv("./data/data.csv")
-    data.drop(['filename'],axis=1, inplace=True)
-    
-    x = data.iloc[:,1:-1].values
-    y = data.iloc[:,-1].values
-
     num_comp = optimal_components(x,y,0.95)
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
@@ -116,9 +109,17 @@ def main():
         edgecolors='b'
         )
         plt.savefig(os.path.join('results', 'projection matrix ' + str(i) + '.png'))
-    
 
-    # lda = LDA(n_components=100)
+def main():
+    le = LabelEncoder()
+    data = pd.read_csv("./data/data.csv")
+    data.drop(['filename'],axis=1, inplace=True)
+    
+    x = data.iloc[:,1:-1].values
+    y = data.iloc[:,-1].values
+    
+    LDAwithGraphics(x,y, data)
+
     # X_train = lda.fit_transform(X_train, y_train)
     # X_test = lda.transform(X_test)
 
@@ -130,15 +131,6 @@ def main():
     # cm = confusion_matrix(y_test, y_pred)
     # print(cm)
     # print('Accuracy' + str(accuracy_score(y_test, y_pred)))
-
-    # colors = ['navy', 'turquoise', 'darkorange']
-
-    # for color, i, target_name in zip(colors, [0, 1, 2], target_names):
-    #     plt.scatter(X_r2[y == i, 0], X_r2[y == i, 1], alpha=.8, color=color, label=target_name)
-    # plt.legend(loc='best', shadow=False, scatterpoints=1)
-    # plt.title('LDA of IRIS dataset')
-
-    # plt.show()
 
     # Plotting the distributions
     for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
