@@ -3,6 +3,7 @@ import pandas as pd
 
 from sklearn import preprocessing
 from sklearn import model_selection
+from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
 
 data = pd.read_csv("./data/data.csv")
@@ -36,6 +37,14 @@ classifier.fit(X_train, y_train)
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
 
-y_test_original = lb.inverse_transform(y_test)
+y_test_labels = lb.inverse_transform(y_test)
+y_pred_labels = lb.inverse_transform(y_pred)
 
-# print(pd.crosstab(y_test, y_pred, rownames=['Actual'], colnames=['Predicted']))
+for x in range(100):
+    print("ORIGINAL:", y_test_labels[x], "PREDICTED:", y_pred_labels[x])
+
+print(metrics.average_precision_score(y_pred, y_test))
+print(metrics.accuracy_score(y_pred, y_test))
+print(metrics.f1_score(y_pred, y_test, average='micro'))
+print(metrics.precision_score(y_pred, y_test, average='micro'))
+print(metrics.recall_score(y_pred, y_test, average='micro'))
