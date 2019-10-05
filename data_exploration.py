@@ -178,7 +178,7 @@ def main():
     plt.xlim([0,N])
     plt.ylim([0,N])
     plt.show()
-    plt.savefig('distance_matrix.png')
+    plt.savefig('data/distance_matrix.png')
     ####################
 
     print(data.columns)
