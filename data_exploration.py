@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib import colors as pltclrs
 import pandas as pd
 import numpy as np
+from sklearn import datasets
+from sklearn.naive_bayes import GaussianNB
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
@@ -15,57 +17,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
 
+from scipy.spatial.distance import pdist, squareform
+
 import seaborn as sns
 
-def optimal_components(x, y, goal_var: float) -> int:
-    lda = LDA(n_components=None)
-    X_lda = lda.fit(x, y)
-
-    # Create array of explained variance ratios
-    lda_var_ratios = lda.explained_variance_ratio_
-    print(lda_var_ratios)
-
-    # Set initial variance explained so far
-    total_variance = 0.0
-    
-    # Set initial number of features
-    n_components = 0
-    
-    # For the explained variance of each feature:
-    for explained_variance in lda_var_ratios:
-        
-        # Add the explained variance to the total
-        total_variance += explained_variance
-        
-        # Add one to the number of components
-        n_components += 1
-        
-        # If we reach our goal level of explained variance
-        if total_variance >= goal_var:
-            # End the loop
-            break
-    
-    print('The optimal number of components for this dataset is ', n_components, ' components.')
-    # Return the number of components
-    return n_components
-
-def correlation_threshold_removal(dataset, threshold):
-    '''Removes the columns above a certain level of correlation'''
-    col_corr = set() # Set of all the names of deleted columns
-    corr_matrix = dataset.corr()
-    for i in range(len(corr_matrix.columns)):
-        for j in range(i):
-            if (corr_matrix.iloc[i, j] >= threshold) and (corr_matrix.columns[j] not in col_corr):
-                colname = corr_matrix.columns[i] # getting the name of column
-                col_corr.add(colname)
-                if colname in dataset.columns:
-                    del dataset[colname] # deleting the column from the dataset
-    
-    print(dataset, col_corr)
-
-def pca(dataset, n_components=None):
-    pca = PCA(n_components=n_components)
-    projected = pca.fit_transform(dataset.to_numpy())
+def pca(x, y, num_comp):
+    pca = PCA(n_components=num_comp)
+    projected = pca.fit_transform(x, y)
     print(pca.explained_variance_ratio_)
     return projected
 
@@ -86,13 +44,6 @@ def distribution_plot(data, filename='output'):
     plt.clf()
 
 def LDAwithGraphics(x,y,data):
-    le = LabelEncoder()
-    num_comp = optimal_components(x,y,0.95)
-
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-    # sc = StandardScaler()
-    # X_train = sc.fit_transform(X_train)
-    # X_test = sc.transform(X_test)
 
     lda = LDA(n_components=num_comp)
     X_lda = lda.fit_transform(x, y)
@@ -162,40 +113,49 @@ def LDAwithGraphics(x,y,data):
 
     return lda
 
+def scatter_plot(data):
+    pd.plotting.scatter_matrix(data, diagonal="kde")
+    plt.tight_layout()
+    plt.show()
+
 def main():
-    le = LabelEncoder()
     data = pd.read_csv("./data/data.csv")
     data.drop(['filename'],axis=1, inplace=True)
     
-    x = data.iloc[:,1:-1].values
+    X = data.iloc[:,1:-1].values
     y = data.iloc[:,-1].values
 
-    ##Outlier removal - using interquantil distance, because our variables follow a mostly normal distribution
-    Q1 = data.quantile(0.25)
-    Q3 = data.quantile(0.75)
-    IQR = Q3 - Q1
-    # print("IQR:", IQR)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.1, random_state=0)
+    
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+    
+    lda = LDA()
+    X_train = lda.fit_transform(X_train, y_train)
+    X_test = lda.transform(X_test)
 
-    data_out = data[~((data < (Q1 - 1.5 * IQR)) |(data > (Q3 + 1.5 * IQR))).any(axis=1)]
-    # print('Shape of dataset before outlier removal: ', data.shape)
-    # print('Shape of dataset before outlier removal: ', data_out.shape)
+    scatter_plot(pd.DataFrame(X_train)) ##scatterplot to see the LDA
 
-    x_out = data_out.iloc[:,1:-1].values
-    y_out = data_out.iloc[:,-1].values
+## classifier 1 - random forest
+    classifier = RandomForestClassifier(n_estimators=100, random_state=0)
 
-    ##########################
+    classifier.fit(X_train, y_train)
+    y_pred = classifier.predict(X_test)
 
-    # X_train = lda.fit_transform(X_train, y_train)
-    # X_test = lda.transform(X_test)
+    cm = confusion_matrix(y_test, y_pred)
+    print(cm)
+    print('Accuracy' + str(accuracy_score(y_test, y_pred)))
+#####################
 
-    # classifier = RandomForestClassifier(max_depth=2, random_state=0)
+## classifier 2 - naive bayes
+    gnb = GaussianNB()
+    y_pred = gnb.fit(X_train, y_train).predict(X_test)
 
-    # classifier.fit(X_train, y_train)
-    # y_pred = classifier.predict(X_test)
-
-    # cm = confusion_matrix(y_test, y_pred)
-    # print(cm)
-    # print('Accuracy' + str(accuracy_score(y_test, y_pred)))
+    cm = confusion_matrix(y_test, y_pred)
+    print(cm)
+    print('Accuracy' + str(accuracy_score(y_test, y_pred)))
+#####################
 
     # Plotting the distributions
     for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
@@ -206,56 +166,40 @@ def main():
        'mfcc20']:
         distribution_plot(data[var_name], var_name)
 
-    comp_x = [1,2,3,4,5,6,7]
-    comp_h = [0.39899075,0.2409215,0.11481741,0.10215124,0.04666102,0.03713209, 0.03028714]
-    plt.bar(comp_x, height=comp_h)
+
+    ###### distance matrix
+    
+    dist_mat = squareform(pdist(data))
+    print(dist_mat)
+        
+    N = len(data)
+    plt.pcolormesh(dist_mat)
+    plt.colorbar()
+    plt.xlim([0,N])
+    plt.ylim([0,N])
     plt.show()
-
-    lda = LDAwithGraphics(x_out,y_out, data_out)
-    # LDAwithGraphics(x, y, data)
-    print(lda.explained_variance_ratio_)
-
-    ##Label encoding
-    # data['label'] = le.fit_transform(data['label'].astype('str'))
-    # le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
-    # print('\nLabel transformations:', le_name_mapping, '\n')
-
-    ##One hot encoding
-    # use pd.concat to join the new columns with your original dataframe
-    data = pd.concat([data,pd.get_dummies(data['label'], prefix='label')],axis=1)
-
-    # now drop the original 'country' column (you don't need it anymore)
-    data.drop(['label'],axis=1, inplace=True)
+    plt.savefig('distance_matrix.png')
+    ####################
 
     print(data.columns)
     print(data.cov())
     print(data.describe())
     print(data.corr())
 
-    ####################
-
-    correlation_matrix(data, 'before threshold removal')
-
-    # Deleting columns with correlation >= 0.8. The data above is before the removal, and the graph below is after
-    correlation_threshold_removal(data, 0.8)
-
-    # Getting the correlation matrix
-    correlation_matrix(data, 'after threshold removal')
-
-    # PCA
-    # projected = pca(x, 2)
-    # label = [x//100 for x in range(1000)]
-    # colors = ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']
-    # plt.scatter(projected[:, 0], projected[:, 1],
-    #         c=label, edgecolor='none', alpha=0.5,
-    #         cmap=pltclrs.ListedColormap(colors))
-    # cb = plt.colorbar()
-    # loc = np.arange(0,max(label),max(label)/float(len(colors)))
-    # cb.set_ticks(loc)
-    # cb.set_ticklabels(colors)
-    # plt.xlabel('component 1')
-    # plt.ylabel('component 2')
-    # plt.show()
+    ## PCA
+    projected = pca(x,y,2)
+    label = [x//100 for x in range(1000)]
+    colors = ['red','green','blue','purple','gray','brown','orange','cyan','pink','olive']
+    plt.scatter(projected[:, 0], projected[:, 1],
+            c=label, edgecolor='none', alpha=0.5,
+            cmap=pltclrs.ListedColormap(colors))
+    cb = plt.colorbar()
+    loc = np.arange(0,max(label),max(label)/float(len(colors)))
+    cb.set_ticks(loc)
+    cb.set_ticklabels(colors)
+    plt.xlabel('component 1')
+    plt.ylabel('component 2')
+    plt.show()
 
 if __name__ == "__main__":
     main()
