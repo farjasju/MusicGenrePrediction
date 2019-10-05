@@ -27,7 +27,7 @@ def load_data():
     y_binarized = lb.transform(y)
 
     # Creating the Training and Test set from data
-    X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y_binarized, test_size = 0.25, random_state = 21)
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y_binarized, stratify=y_binarized, test_size = 0.25, random_state = 21)
 
     # Feature Scaling
     scaler = preprocessing.StandardScaler()
