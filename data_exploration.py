@@ -4,8 +4,16 @@ import matplotlib.pyplot as plt
 from matplotlib import colors as pltclrs
 import pandas as pd
 import numpy as np
+
 from sklearn import datasets
 from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
+from sklearn.svm import SVC
+from sklearn import tree
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
@@ -135,9 +143,10 @@ def main():
     X_train = lda.fit_transform(X_train, y_train)
     X_test = lda.transform(X_test)
 
-    scatter_plot(pd.DataFrame(X_train)) ##scatterplot to see the LDA
+    # scatter_plot(pd.DataFrame(X_train)) ##scatterplot to see the LDA
 
 ## classifier 1 - random forest
+    print('Random forest\n')
     classifier = RandomForestClassifier(n_estimators=100, random_state=0)
 
     classifier.fit(X_train, y_train)
@@ -145,25 +154,129 @@ def main():
 
     cm = confusion_matrix(y_test, y_pred)
     print(cm)
-    print('Accuracy' + str(accuracy_score(y_test, y_pred)))
-#####################
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 2 - naive bayes
+    print('Naive Bayes:\n')
     gnb = GaussianNB()
     y_pred = gnb.fit(X_train, y_train).predict(X_test)
 
     cm = confusion_matrix(y_test, y_pred)
     print(cm)
-    print('Accuracy' + str(accuracy_score(y_test, y_pred)))
-#####################
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 3 - logistic regression
+    print('Logistic regression:\n')
+    logisticRegr = LogisticRegression(solver='sag', multi_class='auto')
+    y_pred = logisticRegr.fit(X_train, y_train).predict(X_test)
+    cm = metrics.confusion_matrix(y_test, y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 4 - linear SVM
+    print('Linear SVM:\n')
+    svclassifier = SVC(kernel='linear')
+    svclassifier.fit(X_train, y_train)
+    y_pred = svclassifier.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 5 - SVC poly kernel degree 2
+    print('SVC poly kernel degree 2:\n')
+    svclassifier = SVC(kernel='poly', degree=2, gamma="scale")
+    svclassifier.fit(X_train, y_train)
+    y_pred = svclassifier.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 6 - SVC poly kernel degree 4
+    print('SVC poly kernel degree 4:\n')
+    svclassifier = SVC(kernel='poly', degree=4, gamma="scale")
+    svclassifier.fit(X_train, y_train)
+    y_pred = svclassifier.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 7 - SVC gaussian kernel
+    print('SVC gaussian kernel -- best so far:\n')
+    svclassifier = SVC(kernel='rbf', gamma="scale", random_state=0)
+    svclassifier.fit(X_train, y_train)
+    y_pred = svclassifier.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 8 - SVC sigmoid kernel
+    print('SVC sigmoid kernel:\n')
+    svclassifier = SVC(kernel='sigmoid', gamma="scale")
+    svclassifier.fit(X_train, y_train)
+    y_pred = svclassifier.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 9 - Decision tree
+    print('Decision tree:\n')
+    model = tree.DecisionTreeClassifier()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 10 - KNN 5 neighbors
+    print('KNN 5 neighbors:\n')
+    knn = KNeighborsClassifier(n_neighbors=5)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 11 - KNN 7 neighbors
+    print('KNN 7 neighbors --second best:\n')
+    knn = KNeighborsClassifier(n_neighbors=7)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 12 - KNN 9 neighbors
+    print('KNN 8 neighbors:\n')
+    knn = KNeighborsClassifier(n_neighbors=9)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test)
+    cm = metrics.confusion_matrix(y_test,y_pred)
+    print(cm)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 13 - Gradient Boosting
+    print('Gradient boosting:')
+    gb_clf = GradientBoostingClassifier(n_estimators=100, learning_rate=0.75, max_features=9, max_depth=3, random_state=0)
+    y_pred = gb_clf.fit(X_train, y_train).predict(X_test)
+
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+## classifier 14 - Neural Network
+    print('Neural Network:')
+    mlp = MLPClassifier(hidden_layer_sizes=(8,8,8), activation='relu', solver='adam', max_iter=3000, random_state=2)
+    y_pred = mlp.fit(X_train, y_train).predict(X_test)
+    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+################################
+
 
     # Plotting the distributions
     for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
-       'spectral_centroid', 'spectral_bandwidth', 'rolloff',
-       'zero_crossing_rate', 'mfcc1', 'mfcc2', 'mfcc3', 'mfcc4', 'mfcc5',
-       'mfcc6', 'mfcc7', 'mfcc8', 'mfcc9', 'mfcc10', 'mfcc11', 'mfcc12',
-       'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
-       'mfcc20']:
+        'spectral_centroid', 'spectral_bandwidth', 'rolloff',
+        'zero_crossing_rate', 'mfcc1', 'mfcc2', 'mfcc3', 'mfcc4', 'mfcc5',
+        'mfcc6', 'mfcc7', 'mfcc8', 'mfcc9', 'mfcc10', 'mfcc11', 'mfcc12',
+        'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
+        'mfcc20']:
         distribution_plot(data[var_name], var_name)
 
 
@@ -178,7 +291,6 @@ def main():
     plt.xlim([0,N])
     plt.ylim([0,N])
     plt.show()
-    plt.savefig('distance_matrix.png')
     ####################
 
     print(data.columns)
