@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib import colors as pltclrs
 import pandas as pd
 import numpy as np
+from sklearn import datasets
+from sklearn.naive_bayes import GaussianNB
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
@@ -133,6 +135,9 @@ def main():
     X_train = lda.fit_transform(X_train, y_train)
     X_test = lda.transform(X_test)
 
+    scatter_plot(pd.DataFrame(X_train)) ##scatterplot to see the LDA
+
+## classifier 1 - random forest
     classifier = RandomForestClassifier(n_estimators=100, random_state=0)
 
     classifier.fit(X_train, y_train)
@@ -141,6 +146,16 @@ def main():
     cm = confusion_matrix(y_test, y_pred)
     print(cm)
     print('Accuracy' + str(accuracy_score(y_test, y_pred)))
+#####################
+
+## classifier 2 - naive bayes
+    gnb = GaussianNB()
+    y_pred = gnb.fit(X_train, y_train).predict(X_test)
+
+    cm = confusion_matrix(y_test, y_pred)
+    print(cm)
+    print('Accuracy' + str(accuracy_score(y_test, y_pred)))
+#####################
 
     # Plotting the distributions
     for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
@@ -150,22 +165,6 @@ def main():
        'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
        'mfcc20']:
         distribution_plot(data[var_name], var_name)
-
-    # lda = LDAwithGraphics(x_out,y_out, data_out)
-    # LDAwithGraphics(x, y, data)
-    # print(lda.explained_variance_ratio_)
-
-    ##Label encoding
-    # data['label'] = le.fit_transform(data['label'].astype('str'))
-    # le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
-    # print('\nLabel transformations:', le_name_mapping, '\n')
-
-    ##One hot encoding
-    # use pd.concat to join the new columns with your original dataframe
-    data = pd.concat([data,pd.get_dummies(data['label'], prefix='label')],axis=1)
-
-    # now drop the original 'country' column (you don't need it anymore)
-    data.drop(['label'],axis=1, inplace=True)
 
 
     ###### distance matrix
@@ -186,13 +185,6 @@ def main():
     print(data.cov())
     print(data.describe())
     print(data.corr())
-
-
-
-    correlation_matrix(data, 'before threshold removal')
-
-    # Getting the correlation matrix
-    correlation_matrix(data, 'after threshold removal')
 
     ## PCA
     projected = pca(x,y,2)
