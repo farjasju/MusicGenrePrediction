@@ -126,6 +126,25 @@ def scatter_plot(data):
     plt.tight_layout()
     plt.show()
 
+def plot_confusion_matrix(matrix, show=True, save=False, filename=None, title='', subtitle=''):
+    ax = sns.heatmap(matrix, annot=True)
+    ax.set_ylim(10.0, 0)
+    plt.suptitle(title)
+    plt.title(subtitle)
+    if show:
+        plt.show()
+    if save:
+        if not filename:
+            raise Exception('Please specify a filename for the plot image')
+        else:
+            fig = ax.get_figure()
+            fig.savefig(os.path.join('results',filename + '_cm.png'))
+
+def run_classifier(classifier, X_train, X_test, y_train, y_test):
+    y_pred = classifier.fit(X_train, y_train).predict(X_test)
+    cm = confusion_matrix(y_test, y_pred)
+    return cm
+
 def main():
     data = pd.read_csv("./data/data.csv")
     data.drop(['filename'],axis=1, inplace=True)
@@ -154,6 +173,7 @@ def main():
 
     cm = confusion_matrix(y_test, y_pred)
     print(cm)
+    plot_confusion_matrix(cm, save=True, filename='random_forest', title='Random Forest')
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 2 - naive bayes
@@ -163,6 +183,7 @@ def main():
 
     cm = confusion_matrix(y_test, y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 3 - logistic regression
@@ -171,6 +192,7 @@ def main():
     y_pred = logisticRegr.fit(X_train, y_train).predict(X_test)
     cm = metrics.confusion_matrix(y_test, y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 4 - linear SVM
@@ -180,6 +202,7 @@ def main():
     y_pred = svclassifier.predict(X_test)
     cm = metrics.confusion_matrix(y_test,y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 5 - SVC poly kernel degree 2
@@ -189,6 +212,7 @@ def main():
     y_pred = svclassifier.predict(X_test)
     cm = metrics.confusion_matrix(y_test,y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 6 - SVC poly kernel degree 4
@@ -198,6 +222,7 @@ def main():
     y_pred = svclassifier.predict(X_test)
     cm = metrics.confusion_matrix(y_test,y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 7 - SVC gaussian kernel
@@ -207,6 +232,7 @@ def main():
     y_pred = svclassifier.predict(X_test)
     cm = metrics.confusion_matrix(y_test,y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 8 - SVC sigmoid kernel
@@ -216,6 +242,7 @@ def main():
     y_pred = svclassifier.predict(X_test)
     cm = metrics.confusion_matrix(y_test,y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 9 - Decision tree
@@ -225,6 +252,7 @@ def main():
     y_pred = model.predict(X_test)
     cm = metrics.confusion_matrix(y_test,y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 10 - KNN 5 neighbors
@@ -243,6 +271,7 @@ def main():
     y_pred = knn.predict(X_test)
     cm = metrics.confusion_matrix(y_test,y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 12 - KNN 9 neighbors
@@ -252,6 +281,7 @@ def main():
     y_pred = knn.predict(X_test)
     cm = metrics.confusion_matrix(y_test,y_pred)
     print(cm)
+    plot_confusion_matrix(cm)
     print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
 ## classifier 13 - Gradient Boosting

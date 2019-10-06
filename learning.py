@@ -5,6 +5,7 @@ from sklearn import preprocessing
 from sklearn import model_selection
 from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 
 import matplotlib.pyplot as plt
 import seaborn as sn
@@ -33,6 +34,9 @@ def load_data():
     scaler = preprocessing.StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
+    lda = LDA()
+    X_train = lda.fit_transform(X_train, y_train)
+    X_test = lda.transform(X_test)
     return X_train, X_test, y_train, y_test
 
 def evaluate(y_pred, y_test):
@@ -58,7 +62,7 @@ def main():
     X_train, X_test, y_train, y_test = load_data()
 
     # Fitting Random Forest Classification to the Training set
-    classifier = RandomForestClassifier(n_estimators = 10, criterion = 'entropy', random_state = 42)
+    classifier = RandomForestClassifier(n_estimators = 100, criterion = 'entropy', random_state = 15)
     classifier.fit(X_train, y_train)
 
     # Predicting the Test set results
