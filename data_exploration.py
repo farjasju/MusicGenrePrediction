@@ -170,9 +170,9 @@ def subtitle_generator(y_test, y_pred):
     prec = str(round(metrics.precision_score(y_test, y_pred, average='macro'),2))
     rec = str(round(metrics.recall_score(y_test, y_pred, average='macro'),2))
     f1 = str(round(metrics.f1_score(y_test, y_pred, average='macro'),2))
+    # print("ROC AUC score:", str(metrics.roc_auc_score(y_pred, y_test, average='macro')))
     subtitle = ["acc=" + acc, "prec=" + prec, "rec=" + rec, "f1=" + f1]
     return title_generator(subtitle)
-
 
 def main():
     data = pd.read_csv("./data/data.csv")
