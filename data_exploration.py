@@ -307,6 +307,30 @@ def main():
 
     ################################
 
+    # Tweaking SVM parameters
+    list_of_gammas = np.linspace(0.000001,1, 50)
+    list_of_C = [x / 10 for x in range(1, 20, 1)]
+    list_of_f1 = []
+    df_dict = {}
+    for gamma in list_of_gammas:
+        for C in list_of_C:
+            classifier = SVC(kernel='rbf', gamma=gamma, random_state=0, C=C)
+            title = title_generator(["SVC", "kernel='rbf'", "gamma="+str(gamma), "C="+str(C)])
+            model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+            subtitle = subtitle_generator(y_test, y_pred)
+            f1 = round(metrics.f1_score(y_test, y_pred, average='macro'),2)
+            df_dict.setdefault('gamma', []).append(gamma)
+            df_dict.setdefault('f1', []).append(f1)
+            df_dict.setdefault('C', []).append(C)
+            # print(title)
+            # print(subtitle)
+    print(df_dict)
+    plt.title("SVM kernel='rbf', gamma='scale'")
+    plot_data = pd.DataFrame(df_dict)
+    print(plot_data)
+    sns.lineplot(x="gamma", y="f1", hue="C", data=plot_data, legend="full")
+    plt.show()
+        # plot_confusion_matrix(cm, show=False, save=True, filename='svc_rbf_C'+str(C), title=title, subtitle=subtitle)
 
     # Plotting the distributions
     # for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
