@@ -180,6 +180,7 @@ def main():
     # scatter_plot(pd.DataFrame(X_train)) ##scatterplot to see the LDA
 
     ## classifier 1 - random forest
+
     classifier = RandomForestClassifier(n_estimators=100, random_state=0)
     title = title_generator(["Random Forest", "100 estimators"])
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
@@ -187,13 +188,14 @@ def main():
     plot_confusion_matrix(cm, show=False, save=True, filename='random_forest', title=title, subtitle=subtitle)
 
     ## classifier 2 - naive bayes
+
     classifier = GaussianNB()
     title = title_generator(["Naive Bayes"])
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='naive_bayes', title=title, subtitle=subtitle)
 
-## classifier 3 - logistic regression
+    ## classifier 3 - logistic regression
 
     classifier = LogisticRegression(solver='sag', multi_class='auto')
     title = title_generator(["Logistic Regression", "Solver:'sag'"])
@@ -201,7 +203,7 @@ def main():
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='logistic_regression', title=title, subtitle=subtitle)
 
-## classifier 4 - linear SVM
+    ## classifier 4 - linear SVM
 
     classifier = SVC(kernel='linear')
     title = title_generator(["Linear SVM"])
@@ -209,7 +211,7 @@ def main():
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='linear_svm', title=title, subtitle=subtitle)
 
-## classifier 5 - SVC poly kernel degree 2
+    ## classifier 5 - SVC poly kernel degree 2
 
     classifier = SVC(kernel='poly', degree=2, gamma="scale")
     title = title_generator(["SVC", "kernel='poly'", "degree=2", "gamma='scale'"])
@@ -217,7 +219,7 @@ def main():
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_poly_2', title=title, subtitle=subtitle)
 
-## classifier 6 - SVC poly kernel degree 4
+    ## classifier 6 - SVC poly kernel degree 4
 
     classifier = SVC(kernel='poly', degree=4, gamma="scale")
     title = title_generator(["SVC", "kernel='poly'", "degree=4", "gamma='scale'"])
@@ -225,7 +227,7 @@ def main():
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_poly_4', title=title, subtitle=subtitle)
 
-## classifier 7 - SVC gaussian kernel (best so far)
+    ## classifier 7 - SVC gaussian kernel (best so far)
 
     classifier = SVC(kernel='rbf', gamma="scale", random_state=0)
     title = title_generator(["SVC", "kernel='rbf'", "gamma='scale'", "C=1"])
@@ -233,69 +235,63 @@ def main():
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_rbf', title=title, subtitle=subtitle)
 
-## classifier 8 - SVC sigmoid kernel
-    print('SVC sigmoid kernel:\n')
-    svclassifier = SVC(kernel='sigmoid', gamma="scale")
-    svclassifier.fit(X_train, y_train)
-    y_pred = svclassifier.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    ## classifier 8 - SVC sigmoid kernel
 
-## classifier 9 - Decision tree
-    print('Decision tree:\n')
-    model = tree.DecisionTreeClassifier()
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    classifier = SVC(kernel='sigmoid', gamma="scale")
+    title = title_generator(["SVC", "kernel='sigmoid'", "gamma='scale'"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='svc_sigmoid', title=title, subtitle=subtitle)
 
-## classifier 10 - KNN 5 neighbors
-    print('KNN 5 neighbors:\n')
-    knn = KNeighborsClassifier(n_neighbors=5)
-    knn.fit(X_train, y_train)
-    y_pred = knn.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    ## classifier 9 - Decision tree
 
-## classifier 11 - KNN 7 neighbors
-    print('KNN 7 neighbors --second best:\n')
-    knn = KNeighborsClassifier(n_neighbors=7)
-    knn.fit(X_train, y_train)
-    y_pred = knn.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    classifier = tree.DecisionTreeClassifier()
+    title = title_generator(["Decision Tree"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='decision_tree', title=title, subtitle=subtitle)
 
-## classifier 12 - KNN 9 neighbors
-    print('KNN 8 neighbors:\n')
-    knn = KNeighborsClassifier(n_neighbors=9)
-    knn.fit(X_train, y_train)
-    y_pred = knn.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    ## classifier 10 - KNN 5 neighbors
 
-## classifier 13 - Gradient Boosting
-    print('Gradient boosting:')
-    gb_clf = GradientBoostingClassifier(n_estimators=100, learning_rate=0.75, max_features=9, max_depth=3, random_state=0)
-    y_pred = gb_clf.fit(X_train, y_train).predict(X_test)
+    classifier = KNeighborsClassifier(n_neighbors=5)
+    title = title_generator(["Knn", "5 neighbors"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='knn_5', title=title, subtitle=subtitle)
 
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    ## classifier 11 - KNN 7 neighbors
 
-## classifier 14 - Neural Network
-    print('Neural Network:')
-    mlp = MLPClassifier(hidden_layer_sizes=(8,8,8), activation='relu', solver='adam', max_iter=3000, random_state=2)
-    y_pred = mlp.fit(X_train, y_train).predict(X_test)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    classifier = KNeighborsClassifier(n_neighbors=7)
+    title = title_generator(["Knn", "7 neighbors"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='knn_7', title=title, subtitle=subtitle)
 
-################################
+    ## classifier 12 - KNN 9 neighbors
+
+    classifier = KNeighborsClassifier(n_neighbors=9)
+    title = title_generator(["Knn", "9 neighbors"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='knn_9', title=title, subtitle=subtitle)
+
+    ## classifier 13 - Gradient Boosting
+
+    classifier = GradientBoostingClassifier(n_estimators=100, learning_rate=0.75, max_features=9, max_depth=3, random_state=0)
+    title = title_generator(["Gradient boosting", "n_estimators=100", "learning_rate=0.75", "max_features=9", "max_depth=3"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='gradient_boosting', title=title, subtitle=subtitle)
+
+    ## classifier 14 - Neural Network
+
+    classifier = MLPClassifier(hidden_layer_sizes=(8,8,8), activation='relu', solver='adam', max_iter=3000, random_state=2)
+    title = title_generator(["MLP", "hidden_layer_sizes=(8,8,8)", "activation='relu'", "solver='adam'", "max_iter=3000"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='mlp', title=title, subtitle=subtitle)
+
+    ################################
 
 
     # Plotting the distributions
