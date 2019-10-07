@@ -127,10 +127,24 @@ def scatter_plot(data):
     plt.show()
 
 def plot_confusion_matrix(matrix, show=True, save=False, filename=None, title='', subtitle=''):
-    ax = sns.heatmap(matrix, annot=True)
+    labels = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop',
+ 'reggae', 'rock']
+    ax = sns.heatmap(matrix, annot=True, xticklabels=labels, yticklabels=labels)
     ax.set_ylim(10.0, 0)
-    plt.suptitle(title)
-    plt.title(subtitle)
+    plt.suptitle(title, fontsize=9)
+    plt.title(subtitle, {'fontsize': 9})
+    plt.xlabel('Predicted')
+    plt.ylabel('True')
+    ax.set_yticklabels(ax.get_yticklabels(), rotation =0)
+    ax.set_xticklabels(ax.get_yticklabels(), rotation =90)
+    plt.margins(0.2)
+
+    # ax.set_xticklabels(['',''] + labels, {'fontsize': 8,
+    #     'verticalalignment': 'baseline'})
+    # ax.set_yticklabels(['',''] + labels, {'fontsize': 8,
+    #     'verticalalignment': 'baseline'})
+    plt.subplots_adjust(bottom=0.15)
+    # plt.xticks(rotation=90)
     if show:
         plt.show()
     if save:
@@ -295,13 +309,13 @@ def main():
 
 
     # Plotting the distributions
-    for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
-        'spectral_centroid', 'spectral_bandwidth', 'rolloff',
-        'zero_crossing_rate', 'mfcc1', 'mfcc2', 'mfcc3', 'mfcc4', 'mfcc5',
-        'mfcc6', 'mfcc7', 'mfcc8', 'mfcc9', 'mfcc10', 'mfcc11', 'mfcc12',
-        'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
-        'mfcc20']:
-        distribution_plot(data[var_name], var_name)
+    # for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
+    #     'spectral_centroid', 'spectral_bandwidth', 'rolloff',
+    #     'zero_crossing_rate', 'mfcc1', 'mfcc2', 'mfcc3', 'mfcc4', 'mfcc5',
+    #     'mfcc6', 'mfcc7', 'mfcc8', 'mfcc9', 'mfcc10', 'mfcc11', 'mfcc12',
+    #     'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
+    #     'mfcc20']:
+    #     distribution_plot(data[var_name], var_name)
 
 
     ###### distance matrix
