@@ -139,6 +139,7 @@ def plot_confusion_matrix(matrix, show=True, save=False, filename=None, title=''
         else:
             fig = ax.get_figure()
             fig.savefig(os.path.join('results',filename + '_cm.png'))
+    plt.clf()
 
 def run_classifier(classifier, X_train, X_test, y_train, y_test):
     y_pred = classifier.fit(X_train, y_train).predict(X_test)
@@ -151,10 +152,10 @@ def title_generator(items):
     return ' · '.join(items)
 
 def subtitle_generator(y_test, y_pred):
-    acc = str(accuracy_score(y_test, y_pred))
-    prec = str(metrics.precision_score(y_test, y_pred, average='micro'))
-    rec = str(metrics.recall_score(y_test, y_pred, average='micro'))
-    f1 = str(metrics.f1_score(y_test, y_pred, average='micro'))
+    acc = str(round(accuracy_score(y_test, y_pred),2))
+    prec = str(round(metrics.precision_score(y_test, y_pred, average='macro'),2))
+    rec = str(round(metrics.recall_score(y_test, y_pred, average='macro'),2))
+    f1 = str(round(metrics.f1_score(y_test, y_pred, average='macro'),2))
     subtitle = ["acc=" + acc, "prec=" + prec, "rec=" + rec, "f1=" + f1]
     return title_generator(subtitle)
 
@@ -178,72 +179,59 @@ def main():
 
     # scatter_plot(pd.DataFrame(X_train)) ##scatterplot to see the LDA
 
-## classifier 1 - random forest
-    print('Random forest\n')
+    ## classifier 1 - random forest
     classifier = RandomForestClassifier(n_estimators=100, random_state=0)
     title = title_generator(["Random Forest", "100 estimators"])
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
-    plot_confusion_matrix(cm, save=True, filename='random_forest', title=title, subtitle=subtitle)
+    plot_confusion_matrix(cm, show=False, save=True, filename='random_forest', title=title, subtitle=subtitle)
 
-## classifier 2 - naive bayes
-    print('Naive Bayes:\n')
-    gnb = GaussianNB()
-    y_pred = gnb.fit(X_train, y_train).predict(X_test)
-
-    cm = confusion_matrix(y_test, y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    ## classifier 2 - naive bayes
+    classifier = GaussianNB()
+    title = title_generator(["Naive Bayes"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='naive_bayes', title=title, subtitle=subtitle)
 
 ## classifier 3 - logistic regression
-    print('Logistic regression:\n')
-    logisticRegr = LogisticRegression(solver='sag', multi_class='auto')
-    y_pred = logisticRegr.fit(X_train, y_train).predict(X_test)
-    cm = metrics.confusion_matrix(y_test, y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+    classifier = LogisticRegression(solver='sag', multi_class='auto')
+    title = title_generator(["Logistic Regression", "Solver:'sag'"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='logistic_regression', title=title, subtitle=subtitle)
 
 ## classifier 4 - linear SVM
-    print('Linear SVM:\n')
-    svclassifier = SVC(kernel='linear')
-    svclassifier.fit(X_train, y_train)
-    y_pred = svclassifier.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+    classifier = SVC(kernel='linear')
+    title = title_generator(["Linear SVM"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='linear_svm', title=title, subtitle=subtitle)
 
 ## classifier 5 - SVC poly kernel degree 2
-    print('SVC poly kernel degree 2:\n')
-    svclassifier = SVC(kernel='poly', degree=2, gamma="scale")
-    svclassifier.fit(X_train, y_train)
-    y_pred = svclassifier.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+
+    classifier = SVC(kernel='poly', degree=2, gamma="scale")
+    title = title_generator(["SVC", "kernel='poly'", "degree=2", "gamma='scale'"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='svc_poly_2', title=title, subtitle=subtitle)
 
 ## classifier 6 - SVC poly kernel degree 4
-    print('SVC poly kernel degree 4:\n')
-    svclassifier = SVC(kernel='poly', degree=4, gamma="scale")
-    svclassifier.fit(X_train, y_train)
-    y_pred = svclassifier.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
 
-## classifier 7 - SVC gaussian kernel
-    print('SVC gaussian kernel -- best so far:\n')
-    svclassifier = SVC(kernel='rbf', gamma="scale", random_state=0)
-    svclassifier.fit(X_train, y_train)
-    y_pred = svclassifier.predict(X_test)
-    cm = metrics.confusion_matrix(y_test,y_pred)
-    print(cm)
-    plot_confusion_matrix(cm)
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    classifier = SVC(kernel='poly', degree=4, gamma="scale")
+    title = title_generator(["SVC", "kernel='poly'", "degree=4", "gamma='scale'"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='svc_poly_4', title=title, subtitle=subtitle)
+
+## classifier 7 - SVC gaussian kernel (best so far)
+
+    classifier = SVC(kernel='rbf', gamma="scale", random_state=0)
+    title = title_generator(["SVC", "kernel='rbf'", "gamma='scale'", "C=1"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='svc_rbf', title=title, subtitle=subtitle)
 
 ## classifier 8 - SVC sigmoid kernel
     print('SVC sigmoid kernel:\n')
