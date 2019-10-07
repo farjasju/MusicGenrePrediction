@@ -143,7 +143,21 @@ def plot_confusion_matrix(matrix, show=True, save=False, filename=None, title=''
 def run_classifier(classifier, X_train, X_test, y_train, y_test):
     y_pred = classifier.fit(X_train, y_train).predict(X_test)
     cm = confusion_matrix(y_test, y_pred)
-    return cm
+    return classifier, y_pred, cm
+
+def title_generator(items):
+    for i in range(len(items)):
+        items[i] = str(items[i])
+    return ' · '.join(items)
+
+def subtitle_generator(y_test, y_pred):
+    acc = str(accuracy_score(y_test, y_pred))
+    prec = str(metrics.precision_score(y_test, y_pred, average='micro'))
+    rec = str(metrics.recall_score(y_test, y_pred, average='micro'))
+    f1 = str(metrics.f1_score(y_test, y_pred, average='micro'))
+    subtitle = ["acc=" + acc, "prec=" + prec, "rec=" + rec, "f1=" + f1]
+    return title_generator(subtitle)
+
 
 def main():
     data = pd.read_csv("./data/data.csv")
@@ -167,14 +181,10 @@ def main():
 ## classifier 1 - random forest
     print('Random forest\n')
     classifier = RandomForestClassifier(n_estimators=100, random_state=0)
-
-    classifier.fit(X_train, y_train)
-    y_pred = classifier.predict(X_test)
-
-    cm = confusion_matrix(y_test, y_pred)
-    print(cm)
-    plot_confusion_matrix(cm, save=True, filename='random_forest', title='Random Forest')
-    print('Accuracy: ' + str(accuracy_score(y_test, y_pred)) + '\n')
+    title = title_generator(["Random Forest", "100 estimators"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, save=True, filename='random_forest', title=title, subtitle=subtitle)
 
 ## classifier 2 - naive bayes
     print('Naive Bayes:\n')
