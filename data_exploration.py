@@ -199,20 +199,25 @@ def main():
     X_lda = lda.fit_transform(X_scaled, y)
 
     # scatter_plot(pd.DataFrame(X_train)) ##scatterplot to see the LDA
+    
+    classifiers = []
 
     ## classifier 1 - random forest
 
     classifier = RandomForestClassifier(n_estimators=100, random_state=0)
     title = title_generator(["Random Forest", "100 estimators"])
+    classifiers.append({'title': title, 'model':classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='random_forest', title=title, subtitle=subtitle)
     print(cross_validation(classifier, X_lda, y), title)
+    
 
     ## classifier 2 - naive bayes
 
     classifier = GaussianNB()
     title = title_generator(["Naive Bayes"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='naive_bayes', title=title, subtitle=subtitle)
@@ -222,6 +227,7 @@ def main():
 
     classifier = LogisticRegression(solver='sag', multi_class='auto')
     title = title_generator(["Logistic Regression", "Solver:'sag'"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='logistic_regression', title=title, subtitle=subtitle)
@@ -231,6 +237,7 @@ def main():
 
     classifier = SVC(kernel='linear')
     title = title_generator(["Linear SVM"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='linear_svm', title=title, subtitle=subtitle)
@@ -240,6 +247,7 @@ def main():
 
     classifier = SVC(kernel='poly', degree=2, gamma="scale")
     title = title_generator(["SVC", "kernel='poly'", "degree=2", "gamma='scale'"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_poly_2', title=title, subtitle=subtitle)
@@ -249,6 +257,7 @@ def main():
 
     classifier = SVC(kernel='poly', degree=4, gamma="scale")
     title = title_generator(["SVC", "kernel='poly'", "degree=4", "gamma='scale'"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_poly_4', title=title, subtitle=subtitle)
@@ -258,6 +267,7 @@ def main():
 
     classifier = SVC(kernel='rbf', gamma="scale", random_state=0)
     title = title_generator(["SVC", "kernel='rbf'", "gamma='scale'", "C=1"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_rbf', title=title, subtitle=subtitle)
@@ -267,6 +277,7 @@ def main():
 
     classifier = SVC(kernel='sigmoid', gamma="scale")
     title = title_generator(["SVC", "kernel='sigmoid'", "gamma='scale'"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_sigmoid', title=title, subtitle=subtitle)
@@ -276,6 +287,7 @@ def main():
 
     classifier = tree.DecisionTreeClassifier()
     title = title_generator(["Decision Tree"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='decision_tree', title=title, subtitle=subtitle)
@@ -294,6 +306,7 @@ def main():
 
     classifier = KNeighborsClassifier(n_neighbors=7)
     title = title_generator(["Knn", "7 neighbors"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='knn_7', title=title, subtitle=subtitle)
@@ -303,6 +316,7 @@ def main():
 
     classifier = KNeighborsClassifier(n_neighbors=9)
     title = title_generator(["Knn", "9 neighbors"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='knn_9', title=title, subtitle=subtitle)
@@ -312,6 +326,7 @@ def main():
 
     classifier = GradientBoostingClassifier(n_estimators=100, learning_rate=0.75, max_features=9, max_depth=3, random_state=0)
     title = title_generator(["Gradient boosting", "n_estimators=100", "learning_rate=0.75", "max_features=9", "max_depth=3"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='gradient_boosting', title=title, subtitle=subtitle)
@@ -321,10 +336,14 @@ def main():
 
     classifier = MLPClassifier(hidden_layer_sizes=(8,8,8), activation='relu', solver='adam', max_iter=3000, random_state=2)
     title = title_generator(["MLP", "hidden_layer_sizes=(8,8,8)", "activation='relu'", "solver='adam'", "max_iter=3000"])
+    classifiers.append({'title': title, 'model': classifier})
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='mlp', title=title, subtitle=subtitle)
     print(cross_validation(classifier, X_lda, y), title)
+    
+    for classifier in classifiers:
+        print(classifier)
 
     ################################
 
