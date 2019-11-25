@@ -207,7 +207,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='random_forest', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 2 - naive bayes
 
@@ -216,7 +216,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='naive_bayes', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 3 - logistic regression
 
@@ -225,7 +225,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='logistic_regression', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 4 - linear SVM
 
@@ -234,7 +234,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='linear_svm', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 5 - SVC poly kernel degree 2
 
@@ -243,7 +243,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_poly_2', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 6 - SVC poly kernel degree 4
 
@@ -252,7 +252,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_poly_4', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 7 - SVC gaussian kernel (best so far)
 
@@ -261,7 +261,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_rbf', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 8 - SVC sigmoid kernel
 
@@ -270,7 +270,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='svc_sigmoid', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 9 - Decision tree
 
@@ -279,7 +279,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='decision_tree', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 10 - KNN 5 neighbors
 
@@ -288,7 +288,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='knn_5', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 11 - KNN 7 neighbors
 
@@ -297,7 +297,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='knn_7', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 12 - KNN 9 neighbors
 
@@ -306,7 +306,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='knn_9', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 13 - Gradient Boosting
 
@@ -315,7 +315,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='gradient_boosting', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 14 - Neural Network
 
@@ -324,7 +324,7 @@ def main():
     model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     subtitle = subtitle_generator(y_test, y_pred)
     plot_confusion_matrix(cm, show=False, save=True, filename='mlp', title=title, subtitle=subtitle)
-    print(cross_validation(classifier, X_lda, y))
+    print(cross_validation(classifier, X_lda, y), title)
 
     ################################
 
