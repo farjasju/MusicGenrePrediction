@@ -17,7 +17,7 @@ from sklearn.neural_network import MLPClassifier
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 
@@ -343,7 +343,7 @@ def main():
     # print(cross_validation(classifier, X_lda, y), title)
     
     for classifier in classifiers:
-        print(cross_validation(classifier, X_lda, y), title)
+        print(cross_validation(classifier['model'], X_lda, y), classifier['title'])
 
     ################################
 
