@@ -16,7 +16,7 @@ The whole project is and relies on open source code.
 
 ### What has been done before
 
-- Tzanetakis, George & Cook, Perry. (2002). *Musical Genre Classification of Audio Signals*. IEEE Transactions on Speech and Audio Processing. 10. 293 - 302. 10.1109/TSA.2002.800560
+- Study using a similar dataset, but with no real machine learning technique: Tzanetakis, George & Cook, Perry. (2002). *Musical Genre Classification of Audio Signals*. IEEE Transactions on Speech and Audio Processing. 10. 293 - 302. 10.1109/TSA.2002.800560
 - Using this very dataset, a study was made on this [github repository](https://github.com/Insiyaa/Music-Tagging), achieving a 63% accuracy.
 - study 2
 - study 3
@@ -39,7 +39,7 @@ The tools used in this project are Python and *scikit-learn* along with *pandas*
 
 The main processing of the raw (audio) data has been done upstream, as the dataset already contains the features wanted. 
 
-The processing of the 
+The processing of the songs is made using the [libROSA](https://librosa.github.io/librosa/) open source library, that allows to extract spectral and rhythm features from audio files. This extraction step will be necessary if we want to add other songs to the dataset.
 
 #### Data exploration
 
@@ -63,7 +63,7 @@ The processing of the
 
 #### Adjust of parameters
 
-
+- Grid search
 
 ### The mathematical theory behind the models used
 
@@ -85,7 +85,7 @@ The processing of the
 
 ### Comparison and discussion of the results
 
-
+- "The best predicted genres are classical and hiphop while the worst predicted are jazz and rock" - Tzanetakis, George & Cook study (2002)
 
 ## Conclusions
 
@@ -93,6 +93,7 @@ The processing of the
 
 - few training examples
 - classifications of genres are often arbitrary and controversial
+- The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where rock songs for example are more consistant bewteen each other. This is certainly one of the reasons why the model has more ease to predict accurately rock songs than jazz ones.
 
 ### What's the best model?
 
