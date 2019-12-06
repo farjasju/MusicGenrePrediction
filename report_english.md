@@ -81,7 +81,9 @@ The processing of the songs is made using the [libROSA](https://librosa.github.i
 
 ### Results of the non-linear models
 
+Grid-search for SVM and MLP:
 
+MLP:  0.6086271466227942 -> 0.6524276952805088
 
 ### Comparison and discussion of the results
 
