@@ -17,7 +17,7 @@ from sklearn.neural_network import MLPClassifier
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.model_selection import train_test_split, cross_val_score, KFold, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 
@@ -46,7 +46,7 @@ def correlation_matrix(data, filename='output'):
 
 def distribution_plot(data, filename='output'):
     #sns.set(color_codes=True)
-    plot = sns.distplot(data)
+    plot = sns.distplot(data, rug=False, hist=True)
     fig = plot.get_figure()
     fig.savefig(os.path.join('results',filename + '_distribution.png'))
     plt.clf()
@@ -297,6 +297,7 @@ def main():
 
     classifier = KNeighborsClassifier(n_neighbors=5)
     title = title_generator(["Knn", "5 neighbors"])
+    classifiers.append({'title': title, 'model': classifier})
     # model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     # subtitle = subtitle_generator(y_test, y_pred)
     # plot_confusion_matrix(cm, show=False, save=True, filename='knn_5', title=title, subtitle=subtitle)
@@ -342,54 +343,87 @@ def main():
     # plot_confusion_matrix(cm, show=False, save=True, filename='mlp', title=title, subtitle=subtitle)
     # print(cross_validation(classifier, X_lda, y), title)
     
+    ## classifier 15 - MLP tweaked
+    parameter_space = {
+        'hidden_layer_sizes': [(10,10,10), (20, 20, 20), (10, 20, 10)],
+        'activation': ['tanh', 'relu'],
+        'solver': ['sgd', 'adam'],
+        'alpha': [0.0001, 0.05],
+        'learning_rate': ['constant', 'adaptive'],
+    }
+    mlp = MLPClassifier(hidden_layer_sizes=(
+        8, 8, 8), activation='relu', solver='adam', max_iter=3000, random_state=2)
+    classifier = GridSearchCV(mlp, parameter_space, n_jobs=7, cv=3)
+    title = title_generator(["MLP", "tweaked parameters (with a grid search)"])
+    classifiers.append({'title': title, 'model': classifier})
+    
+    
     for classifier in classifiers:
         print(cross_validation(classifier['model'], X_lda, y), classifier['title'])
 
     ################################
 
-    # Tweaking SVM parameters
+    # # Tweaking SVM parameters
     # list_of_gammas = np.linspace(0.000001,1, 50)
     # list_of_C = [x / 10 for x in range(1, 20, 2)]
     # list_of_f1 = []
     # df_dict = {}
+    # best_f1 = 0
+    # best_parameters = set()
     # for gamma in list_of_gammas:
     #     for C in list_of_C:
     #         classifier = SVC(kernel='rbf', gamma=gamma, random_state=0, C=C)
-    #         title = title_generator(["SVC", "kernel='rbf'", "gamma="+str(gamma), "C="+str(C)])
-    #         model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
-    #         subtitle = subtitle_generator(y_test, y_pred)
-    #         f1 = round(metrics.f1_score(y_test, y_pred, average='macro'),2)
+    #         f1 = cross_validation(classifier, X_lda, y)
+    #         # f1 = round(metrics.f1_score(y_test, y_pred, average='macro'),2)
+    #         if f1 > best_f1:
+    #             best_parameters.add((round(gamma,4), round(C,4)))
+    #             best_f1 = f1
     #         df_dict.setdefault('gamma', []).append(gamma)
     #         df_dict.setdefault('f1', []).append(f1)
     #         df_dict.setdefault('C', []).append(C)
     #         # print(title)
     #         # print(subtitle)
-    # print(df_dict)
+    # print('Best SVM parameters (gamma, C):', best_parameters)
+    # fig = plt.figure(figsize=(18, 12))
     # plt.title("SVM kernel='rbf', gamma='scale'")
     # plot_data = pd.DataFrame(df_dict)
-    # print(plot_data)
     # sns.lineplot(x="gamma", y="f1", hue="C", data=plot_data, legend="full")
-    # plt.show()
+    # fig.savefig(os.path.join(
+    #     'results', 'svm_parameters_grid_search.png'), bbox_inches="tight")
+    # fig.show()
 
-    # classifier = SVC(kernel='rbf', gamma=0.22, random_state=0, C=1.9)
-    # title = title_generator(["SVC", "kernel='rbf'", "gamma=0.25", "C=1.5"])
-    # model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
-    # subtitle = subtitle_generator(y_test, y_pred)
-    # plot_confusion_matrix(cm, show=False, save=True, filename='svc_rbf_tweaked', title=title, subtitle=subtitle)
+    classifier = SVC(kernel='rbf', gamma=0.0204, random_state=0, C=0.9)
+    title = title_generator(["SVC", "kernel='rbf'", "gamma=0.0204", "C=0.9"])
+    model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    subtitle = subtitle_generator(y_test, y_pred)
+    plot_confusion_matrix(cm, show=False, save=True, filename='svc_rbf_tweaked', title=title, subtitle=subtitle)
 
     # print(cross_validation(classifier, X_lda, y))
     # print(cross_validation(classifier, X_scaled, y))
 
         # plot_confusion_matrix(cm, show=False, save=True, filename='svc_rbf_C'+str(C), title=title, subtitle=subtitle)
 
+    # Tweaking the MLP parameters
+    parameter_space = {
+        'hidden_layer_sizes': [(50, 50, 50), (50, 100, 50), (100,)],
+        'activation': ['tanh', 'relu'],
+        'solver': ['sgd', 'adam'],
+        'alpha': [0.0001, 0.05],
+        'learning_rate': ['constant', 'adaptive'],
+    }
+    mlp = MLPClassifier(hidden_layer_sizes=(
+        8, 8, 8), activation='relu', solver='adam', max_iter=3000, random_state=2)
+    clf = GridSearchCV(mlp, parameter_space, n_jobs=7, cv=3)
+    clf.fit(X_lda, y)
+
     # Plotting the distributions
-    # for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
-    #     'spectral_centroid', 'spectral_bandwidth', 'rolloff',
-    #     'zero_crossing_rate', 'mfcc1', 'mfcc2', 'mfcc3', 'mfcc4', 'mfcc5',
-    #     'mfcc6', 'mfcc7', 'mfcc8', 'mfcc9', 'mfcc10', 'mfcc11', 'mfcc12',
-    #     'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
-    #     'mfcc20']:
-    #     distribution_plot(data[var_name], var_name)
+    for var_name in ['tempo', 'beats', 'chroma_stft', 'rmse',
+        'spectral_centroid', 'spectral_bandwidth', 'rolloff',
+        'zero_crossing_rate', 'mfcc1', 'mfcc2', 'mfcc3', 'mfcc4', 'mfcc5',
+        'mfcc6', 'mfcc7', 'mfcc8', 'mfcc9', 'mfcc10', 'mfcc11', 'mfcc12',
+        'mfcc13', 'mfcc14', 'mfcc15', 'mfcc16', 'mfcc17', 'mfcc18', 'mfcc19',
+        'mfcc20']:
+        distribution_plot(data[var_name], var_name)
 
 
     ###### distance matrix
