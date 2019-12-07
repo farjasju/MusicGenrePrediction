@@ -49,7 +49,7 @@ From the beginning, it seemed that our classes are not easily separable on any o
 
 Because it is a highly-dimensional problem, we also chose to analyse the correlation matrix.
 
-![correlation matrix no label_distribution](./img/correlation matrix no label_distribution.png)
+![correlation matrix no label_distribution](./img/corr_matrix.png)
 
 With this plot, we saw that `tempo and beats` were highly correlated, and `chroma_stft, rmse, spectral_centroid, spectral_bandwidth, roloff and zero_crossing_rate and mfcc1`  were too, which explains the scatter plot. From `mfcc2 to mfcc20`, they are not very correlated.
 
@@ -57,7 +57,7 @@ With this plot, we saw that `tempo and beats` were highly correlated, and `chrom
 
 Then, we wanted to understand if our dataset had any outliers, so we plot a distance matrix using Euclidean distances, but we didn't find any particular outliers, so there was nothing to be removed.
 
-![distance matrix](./img/distance matrix.png)
+![distance matrix](./img/distance_matrix.png)
 
 Also, there were no missing values, and our problem was balanced, so we were ready to work with it.
 
@@ -70,7 +70,7 @@ First, we tried PCA, but since the transformation performed by the ACP does not 
 Then, we tried LDA, which was more effective, because it takes class information into account for the transformation, such that, in the new coordinate space, the separation between classes is maximum. After the LDA transformation, the 20 variables reduced to 9, because the number of transformed variables in the LDA is the number of classes of the original problem (10) minus 1.
 
 
-![lda scatter plot](./img/lda scatter plot.png)
+![lda scatter plot](./img/lda_scatter_plot.png)
 
 
 
