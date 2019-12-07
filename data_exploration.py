@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colors as pltclrs
 import pandas as pd
 import numpy as np
+from collections import defaultdict
 
 from sklearn import datasets
 from sklearn.naive_bayes import GaussianNB
@@ -295,6 +296,24 @@ def main():
     title = title_generator(["SVC", "kernel='rbf'", "gamma=0.0204", "C=0.9"])
     classifiers.append({'title': title, 'model': classifier})
 
+    # classifier 7 bis - SVC gaussian kernel (best so far) - tweaked parameters
+
+    classifier = SVC(kernel='rbf', gamma=0.08, random_state=0, C=0.3)
+    title = title_generator(["SVC", "kernel='rbf'", "gamma=0.08", "C=0.3"])
+    classifiers.append({'title': title, 'model': classifier})
+
+    # classifier 7 bis - SVC gaussian kernel (best so far) - tweaked parameters
+
+    classifier = SVC(kernel='rbf', gamma=0.1, random_state=0, C=1)
+    title = title_generator(["SVC", "kernel='rbf'", "gamma=0.1", "C=1"])
+    classifiers.append({'title': title, 'model': classifier})
+
+    # classifier 7 bis - SVC gaussian kernel (best so far) - tweaked parameters
+
+    classifier = SVC(kernel='rbf', gamma=0.04, random_state=0, C=1.1)
+    title = title_generator(["SVC", "kernel='rbf'", "gamma=0.04", "C=1.1"])
+    classifiers.append({'title': title, 'model': classifier})
+
     # classifier 8 - SVC sigmoid kernel
 
     classifier = SVC(kernel='sigmoid', gamma="scale")
@@ -390,26 +409,28 @@ def main():
     ################################
 
     # # Tweaking SVM parameters
-    # list_of_gammas = np.linspace(0.000001,1, 50)
+    # list_of_gammas = np.linspace(0.000001, 1, 50)
     # list_of_C = [x / 10 for x in range(1, 20, 2)]
     # list_of_f1 = []
     # df_dict = {}
     # best_f1 = 0
-    # best_parameters = set()
+    # best_parameters = defaultdict(list)
     # for gamma in list_of_gammas:
     #     for C in list_of_C:
     #         classifier = SVC(kernel='rbf', gamma=gamma, random_state=0, C=C)
     #         f1 = cross_validation(classifier, X_lda, y)
     #         # f1 = round(metrics.f1_score(y_test, y_pred, average='macro'),2)
     #         if f1 > best_f1:
-    #             best_parameters.add((round(gamma,4), round(C,4)))
+    #             best_parameters[f1].append((round(gamma, 4), round(C, 4)))
     #             best_f1 = f1
     #         df_dict.setdefault('gamma', []).append(gamma)
     #         df_dict.setdefault('f1', []).append(f1)
     #         df_dict.setdefault('C', []).append(C)
     #         # print(title)
     #         # print(subtitle)
-    # print('Best SVM parameters (gamma, C):', best_parameters)
+    # print('Best SVM parameters(gamma, C):',
+    #       best_parameters[max(best_parameters.keys())])
+    # print('Good SVM parameters (gamma, C):', best_parameters)
     # fig = plt.figure(figsize=(18, 12))
     # plt.title("SVM kernel='rbf', gamma='scale'")
     # plot_data = pd.DataFrame(df_dict)
@@ -418,13 +439,13 @@ def main():
     #     'results', 'svm_parameters_grid_search.png'), bbox_inches="tight")
     # fig.show()
 
-    classifier = SVC(kernel='rbf', gamma=0.0204, random_state=0, C=0.9)
-    title = title_generator(["SVC", "kernel='rbf'", "gamma=0.0204", "C=0.9"])
-    model, y_pred, cm = run_classifier(
-        classifier, X_train, X_test, y_train, y_test)
-    subtitle = subtitle_generator(y_test, y_pred)
-    plot_confusion_matrix(cm, show=False, save=True,
-                          filename='svc_rbf_tweaked', title=title, subtitle=subtitle)
+    # classifier = SVC(kernel='rbf', gamma=0.0204, random_state=0, C=0.9)
+    # title = title_generator(["SVC", "kernel='rbf'", "gamma=0.0204", "C=0.9"])
+    # model, y_pred, cm = run_classifier(
+    #     classifier, X_train, X_test, y_train, y_test)
+    # subtitle = subtitle_generator(y_test, y_pred)
+    # plot_confusion_matrix(cm, show=False, save=True,
+    #                       filename='svc_rbf_tweaked', title=title, subtitle=subtitle)
 
     # print(cross_validation(classifier, X_lda, y))
     # print(cross_validation(classifier, X_scaled, y))
