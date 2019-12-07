@@ -104,3 +104,4 @@ MLP:  0.6086271466227942 -> 0.6524276952805088
 ### Possible improvements
 
 - subgenres (hierarchical structure)
+- Enlarge the dataset (using the [Million Song Dataset](http://millionsongdataset.com) for example), to both have more training data and a bigger test dataset
