@@ -1,5 +1,6 @@
 data/.~*
 data/MillionSongSubset/*
+data/songs
 .DS_Store
 results/*
 results/
