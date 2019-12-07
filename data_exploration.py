@@ -138,7 +138,7 @@ def plot_confusion_matrix(matrix, show=True, save=False, filename=None, title=''
               'reggae', 'rock']
     ax = sns.heatmap(matrix, annot=True,
                      xticklabels=labels, yticklabels=labels)
-    ax.set_ylim(100.0, 0)
+    ax.set_ylim(10.0, 0)
     plt.suptitle(title, fontsize=9)
     plt.title(subtitle, {'fontsize': 9})
     plt.xlabel('Predicted')
