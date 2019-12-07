@@ -43,13 +43,13 @@ The processing of the songs is made using the [libROSA](https://librosa.github.i
 
 At first, we plot the scatter plot, and it was difficult to analyze because of the many variables we're working with. 
 
-#### ![](./results/scatter_plot_original.png)
+#### ![](./img/scatter_plot_original.png)
 
 From the beginning, it seemed that our classes are not easily separable on any of the variables, but this is expected because, since it is a projection in a bi-dimensional plane, the data appear more mixed up than they are in reality, especially for classification problems. 
 
 Because it is a highly-dimensional problem, we also chose to analyse the correlation matrix.
 
-![correlation matrix no label_distribution](./results/correlation matrix no label_distribution.png)
+![correlation matrix no label_distribution](./img/correlation matrix no label_distribution.png)
 
 With this plot, we saw that `tempo and beats` were highly correlated, and `chroma_stft, rmse, spectral_centroid, spectral_bandwidth, roloff and zero_crossing_rate and mfcc1`  were too, which explains the scatter plot. From `mfcc2 to mfcc20`, they are not very correlated.
 
@@ -57,7 +57,7 @@ With this plot, we saw that `tempo and beats` were highly correlated, and `chrom
 
 Then, we wanted to understand if our dataset had any outliers, so we plot a distance matrix using Euclidean distances, but we didn't find any particular outliers, so there was nothing to be removed.
 
-![distance matrix](./results/distance matrix.png)
+![distance matrix](./img/distance matrix.png)
 
 Also, there were no missing values, and our problem was balanced, so we were ready to work with it.
 
@@ -65,12 +65,12 @@ To make our dataset more separable, we decided to transform our data into compon
 
 First, we tried PCA, but since the transformation performed by the ACP does not take into account class information, it was not the most effective for class separation, as it is possible to see in the image below.
 
-![pca](./results/pca.png)
+![pca](./img/pca.png)
 
 Then, we tried LDA, which was more effective, because it takes class information into account for the transformation, such that, in the new coordinate space, the separation between classes is maximum. After the LDA transformation, the 20 variables reduced to 9, because the number of transformed variables in the LDA is the number of classes of the original problem (10) minus 1.
 
 
-![lda scatter plot](/Users/luisfernandolins/MusicGenrePrediction/results/lda scatter plot.png)
+![lda scatter plot](./img/lda scatter plot.png)
 
 
 
@@ -132,4 +132,3 @@ MLP:  0.6086271466227942 -> 0.6524276952805088
 ### Possible improvements
 
 - subgenres (hierarchical structure)
-- Enlarge the dataset (using the [Million Song Dataset](http://millionsongdataset.com) for example), to both have more training data and a bigger test dataset
