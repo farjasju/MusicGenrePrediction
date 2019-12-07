@@ -18,14 +18,14 @@ The whole project is and relies on open source code.
 
 - Study using a similar dataset, but with no real machine learning technique: Tzanetakis, George & Cook, Perry. (2002). *Musical Genre Classification of Audio Signals*. IEEE Transactions on Speech and Audio Processing. 10. 293 - 302. 10.1109/TSA.2002.800560
 - Using this very dataset, a study was made on this [github repository](https://github.com/Insiyaa/Music-Tagging), achieving a 63% accuracy.
-- study 2
-- study 3
+- Out of the 4 public kernels on Kaggle that used this dataset, the best result had 66% accuracy (https://www.kaggle.com/luiscesar/svm-music-classification). 
+  
 
 ## Dataset & tools
 
 ### The data
 
-The data is available on the *Kaggle* dataset [Music Features](https://www.kaggle.com/insiyeah/musicfeatures). It has been built from 1000 30-second audio tracks of 10 different genres, 100 tracks per genre. Each track is a 22050Hz Mono 16-bit audio file in .wav format. The features present in the dataset have been extracted from the songs using [libROSA](https://librosa.github.io/librosa/) library.
+The data is available on the *Kaggle* dataset [Music Features](https://www.kaggle.com/insiyeah/musicfeatures), by Insiyah Hajoori. It has been built from 1000 30-second audio tracks of 10 different genres, 100 tracks per genre. Each track is a 22050Hz Mono 16-bit audio file in .wav format, and the features present in the dataset have been extracted from the songs using [libROSA](https://librosa.github.io/librosa/) library.
 
 ### The tools
 
@@ -41,15 +41,42 @@ The main processing of the raw (audio) data has been done upstream, as the datas
 
 The processing of the songs is made using the [libROSA](https://librosa.github.io/librosa/) open source library, that allows to extract spectral and rhythm features from audio files. This extraction step will be necessary if we want to add other songs to the dataset.
 
-#### Data exploration
+At first, we plot the scatter plot, and it was difficult to analyze because of the many variables we're working with. 
 
-- LDA
+#### ![](./results/scatter_plot_original.png)
 
-  
+From the beginning, it seemed that our classes are not easily separable on any of the variables, but this is expected because, since it is a projection in a bi-dimensional plane, the data appear more mixed up than they are in reality, especially for classification problems. 
 
-- Confusion matrix
+Because it is a highly-dimensional problem, we also chose to analyse the correlation matrix.
 
-  
+![correlation matrix no label_distribution](./results/correlation matrix no label_distribution.png)
+
+With this plot, we saw that `tempo and beats` were highly correlated, and `chroma_stft, rmse, spectral_centroid, spectral_bandwidth, roloff and zero_crossing_rate and mfcc1`  were too, which explains the scatter plot. From `mfcc2 to mfcc20`, they are not very correlated.
+
+
+
+Then, we wanted to understand if our dataset had any outliers, so we plot a distance matrix using Euclidean distances, but we didn't find any particular outliers, so there was nothing to be removed.
+
+![distance matrix](./results/distance matrix.png)
+
+Also, there were no missing values, and our problem was balanced, so we were ready to work with it.
+
+To make our dataset more separable, we decided to transform our data into components where classes were supposed to be more apart from each other.
+
+First, we tried PCA, but since the transformation performed by the ACP does not take into account class information, it was not the most effective for class separation, as it is possible to see in the image below.
+
+![pca](./results/pca.png)
+
+Then, we tried LDA, which was more effective, because it takes class information into account for the transformation, such that, in the new coordinate space, the separation between classes is maximum. After the LDA transformation, the 20 variables reduced to 9, because the number of transformed variables in the LDA is the number of classes of the original problem (10) minus 1.
+
+
+![lda scatter plot](/Users/luisfernandolins/MusicGenrePrediction/results/lda scatter plot.png)
+
+
+
+With this plot, the separation between classes became more evident.
+
+
 
 #### Comparison of models
 
@@ -64,6 +91,7 @@ The processing of the songs is made using the [libROSA](https://librosa.github.i
 #### Adjust of parameters
 
 - Grid search
+  
 
 ### The mathematical theory behind the models used
 
@@ -93,8 +121,8 @@ MLP:  0.6086271466227942 -> 0.6524276952805088
 
 ### Discussion on the characteristics of the problem
 
-- few training examples
-- classifications of genres are often arbitrary and controversial
+- Few training examples
+- Classifications of genres are often arbitrary and controversial
 - The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where rock songs for example are more consistant bewteen each other. This is certainly one of the reasons why the model has more ease to predict accurately rock songs than jazz ones.
 
 ### What's the best model?

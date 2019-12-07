@@ -18,7 +18,7 @@ from sklearn.neural_network import MLPClassifier
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split, cross_val_score, KFold, GridSearchCV, StratifiedKFold
+from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict, KFold, GridSearchCV, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 
@@ -243,12 +243,16 @@ def main():
     # subtitle = subtitle_generator(y_test, y_pred)
     # plot_confusion_matrix(cm, show=False, save=True, filename='random_forest', title=title, subtitle=subtitle)
     # print(cross_validation(classifier, X_lda, y), title)
+    
 
     # classifier 2 - naive bayes
 
     classifier = GaussianNB()
     title = title_generator(["Naive Bayes"])
     classifiers.append({'title': title, 'model': classifier})
+    # model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
+    
+    # plot_confusion_matrix(cm, show=False, save=True, filename='naive_bayes', title=title, subtitle=subtitle)
     # model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     # subtitle = subtitle_generator(y_test, y_pred)
     # plot_confusion_matrix(cm, show=False, save=True, filename='naive_bayes', title=title, subtitle=subtitle)
