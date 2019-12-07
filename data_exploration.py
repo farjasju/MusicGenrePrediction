@@ -18,7 +18,7 @@ from sklearn.neural_network import MLPClassifier
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split, cross_val_score, KFold, GridSearchCV
+from sklearn.model_selection import train_test_split, cross_val_score, KFold, GridSearchCV, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 
@@ -189,7 +189,8 @@ def subtitle_generator(y_test, y_pred):
 
 
 def cross_validation(clf, X, y):
-    scores = cross_val_score(clf, X, y, cv=5, scoring='f1_macro')
+    cv = StratifiedKFold(n_splits=12, random_state=None, shuffle=False)
+    scores = cross_val_score(clf, X, y, cv=cv, scoring='f1_macro')
     return scores.mean()
 
 
@@ -200,19 +201,34 @@ def main():
     X = data.iloc[:, 1:-1].values
     y = data.iloc[:, -1].values
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, stratify=y, test_size=0.5, random_state=0)
-
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.1, random_state=0)
+    
     sc = StandardScaler()
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
-
+    # X_train = sc.fit_transform(X_train)
+    # X_test = sc.transform(X_test)
+    
     lda = LDA()
-    X_train = lda.fit_transform(X_train, y_train)
-    X_test = lda.transform(X_test)
+    # X_train = lda.fit_transform(X, y)
+    # X_test = lda.transform(X_test)
 
     X_scaled = sc.fit_transform(X)
     X_lda = lda.fit_transform(X_scaled, y)
+    # data.drop(['label'],axis=1, inplace=True)
+    # correlation_matrix(data, 'no label')
+
+    dfx = pd.DataFrame(X_lda, columns=['lda0', 'lda1', 'lda2', 'lda3', 'lda4', 'lda5', 'lda6', 'lda7', 'lda8'])
+    dfy = pd.DataFrame(y, columns=['label'])
+
+    ######################### scatter plot lda 
+
+    # concat = pd.concat([dfx, dfy], axis=1)
+    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+    #     print(concat)
+
+    # g = sns.pairplot(pd.DataFrame(concat), hue="label")
+    # g.savefig('scatter_plot2.png')
+
+    #########################
 
     # scatter_plot(pd.DataFrame(X_train)) ##scatterplot to see the LDA
 
