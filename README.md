@@ -27,7 +27,7 @@ Genre classification is widely used these days, and there are already many studi
 
 ### The data
 
-The data is available on the *Kaggle* dataset [Music Features](https://www.kaggle.com/insiyeah/musicfeatures), shared by Insiyah Hajoori, first published on [MARSYAS](http://marsyas.info/). 
+The data is available on the Kaggle dataset [Music Features](https://www.kaggle.com/insiyeah/musicfeatures), shared by *Insiyah Hajoori*, first published on [MARSYAS](http://marsyas.info/). 
 
 It has been built from 1000 30-second audio tracks of 10 different genres, 100 tracks per genre. Each track is a 22050Hz Mono 16-bit audio file in .wav format, and the features present in the dataset have been extracted from the songs using [libROSA](https://librosa.github.io/librosa/) library.
 
@@ -50,15 +50,15 @@ Each song is described by the following features:
 - `zero_crossing_rate` : rate of sign-changes along the signal. Is a key-feature to recognize percussive sounds.
 - `mfcc1`, `mfcc2`, `mfcc3`, ...  : *Mel-frequency cepstral coefficients* of the song extract. Can be seen as the "spectrum-of-the-spectrum".
 
-
-
 ### The tools
 
-The tools used in this project are Python and *scikit-learn* along with *pandas* and *numpy* for data analysis, and *matplotlib* for data visualization. 
+![](img/tools.png)
+
+The tools used in this project are Python and `scikit-learn` along with `pandas` and `numpy` for data analysis, and `matplotlib` for data visualization. 
 
 ## Methodology
 
-### How we tried to solve this problem
+### Processing and analysis of the data
 
 #### Pre-processing
 
@@ -72,13 +72,13 @@ At first, we plot the scatter plot, and it was difficult to analyze because of t
 
 #### ![](./img/scatter_plot_original.png)
 
-From the beginning, it seemed that our classes are not easily separable on any of the variables, but this is expected because, since it is a projection in a bi-dimensional plane, the data appear more mixed up than they are in reality, especially for classification problems. 
+From the beginning, it seemed that our classes are not easily separable on any of the variables, as it was expected. Indeed, since it is a projection in a bi-dimensional plane, the data appear more mixed up than they are in reality, especially for classification problems. 
 
-Because it is a highly-dimensional problem, we also chose to analyze the correlation matrix.
+Because of the number of features, we also chose to analyze the correlation matrix.
 
 ![correlation matrix no label_distribution](./img/corr_matrix.png)
 
-With this plot, we saw that `tempo and beats` were highly correlated, and `chroma_stft, rmse, spectral_centroid, spectral_bandwidth, roloff and zero_crossing_rate and mfcc1`  were too, which explains the scatter plot. From `mfcc2 to mfcc20`, they are not very correlated.
+This plot shows that `tempo` and `beats` are highly correlated, as well as `chroma_stft`, `rmse`, `spectral_centroid`, `spectral_bandwidth`, `roloff`, `zero_crossing_rate` and `mfcc1`, which explains the scatter plot. Features from `mfcc2` to `mfcc20` are weakly correlated.
 
 
 
@@ -101,7 +101,11 @@ Then, we tried LDA, which was more effective, because it takes class information
 
 
 
-With this plot, the separation between classes became more evident.
+With this plot, the separation between classes became more evident, even though the data is not linearly separable.
+
+### Choosing the model
+
+#### The mathematical theory behind the models used
 
 
 
@@ -109,7 +113,7 @@ With this plot, the separation between classes became more evident.
 
 - List of models: linear/non-linear
 
-  
+
 
 - Cross-validation
 
@@ -119,10 +123,6 @@ With this plot, the separation between classes became more evident.
 
 - Grid search
   
-
-### The mathematical theory behind the models used
-
-
 
 ## Results
 
