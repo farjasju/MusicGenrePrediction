@@ -189,8 +189,8 @@ def subtitle_generator(y_test, y_pred):
 
 
 def cross_validation(clf, X, y):
-    cv = StratifiedKFold(n_splits=12, random_state=None, shuffle=False)
-    scores = cross_val_score(clf, X, y, cv=cv, scoring='f1_macro')
+    cv = StratifiedKFold(n_splits=10, random_state=None, shuffle=False)
+    scores = cross_val_score(clf, X, y, cv=cv, scoring='accuracy')
     return scores.mean()
 
 

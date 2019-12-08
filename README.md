@@ -66,43 +66,6 @@ The main processing of the raw (audio) data has been done upstream, as the datas
 
 The processing of the songs is made using the [libROSA](https://librosa.github.io/librosa/) open source library, that allows to extract spectral and rhythm features from audio files. This extraction step will be necessary if we want to add other songs to the dataset.
 
-### Data exploration
-
-At first, when plotting the scatter plot, the data is difficult to analyze because of the many variables we're working with. 
-
-![](./img/scatter_plot_original.png)
-
-From the beginning, it seemed that our classes are not easily separable on any of the variables, as it was expected. Indeed, since it is a projection in a bi-dimensional plane, the data appear more mixed up than they are in reality, especially for classification problems. 
-
-Because of the number of features, we also chose to analyze the correlation matrix.
-
-![correlation matrix no label_distribution](./img/corr_matrix.png)
-
-This plot shows that `tempo` and `beats` are highly correlated, as well as `chroma_stft`, `rmse`, `spectral_centroid`, `spectral_bandwidth`, `roloff`, `zero_crossing_rate` and `mfcc1`, which explains the scatter plot. Features from `mfcc2` to `mfcc20` are weakly correlated.
-
-
-
-Then, we wanted to understand if our dataset had any outliers, so we plot a distance matrix using Euclidean distances, but we didn't find any particular outliers, so there was nothing to be removed.
-
-![distance matrix](./img/distance_matrix.png)
-
-Also, there were no missing values, and our problem was balanced, so we were ready to work with it.
-
-To make our dataset more separable, we decided to transform our data into components where classes were supposed to be more apart from each other.
-
-First, we tried PCA, but since the transformation performed by the ACP does not take into account class information, it was not the most effective for class separation, as it is possible to see in the image below.
-
-![pca](./img/pca.png)
-
-Then, we tried LDA, which was more effective, because it takes class information into account for the transformation, such that, in the new coordinate space, the separation between classes is maximum. After the LDA transformation, the 20 variables reduced to 9, because the number of transformed variables in the LDA is the number of classes of the original problem (10) minus 1.
-
-
-![lda scatter plot](./img/lda_scatter_plot.png)
-
-
-
-With this plot, the separation between classes became more evident, even though the data is not linearly separable.
-
 ## Choosing the model
 
 ### The mathematical theory behind the models used
@@ -209,7 +172,13 @@ Non parametric
 
 ##### Multi Layer Perceptron (MLP)
 
+A multilayer perceptron (MLP) is a neural network similar to the simple perceptron, but has more than one layer of neurons. The MLP is used when the classes are not linearly separable, and it generates more than one classifying line.
 
+Learning in this type of network is usually done through the error backpropagation algorithm, but there are other algorithms for this purpose.
+
+Each network layer has a specific function. The output layer receives stimuli from the intermediate layer and builds the response.
+
+![mlp](/Users/luisfernandolins/MusicGenrePrediction/img/mlp.jpg)
 
 ### Implementation and comparison of models
 
@@ -226,15 +195,64 @@ All the models have been implemented using the `scikit-learn` library.
 
 ## Results
 
+### Visualization and characterization of the data
+
+### Data exploration
+
+At first, when plotting the scatter plot, the data is difficult to analyze because of the many variables we're working with. 
+
+![](./img/scatter_plot_original.png)
+
+From the beginning, it seemed that our classes are not easily separable on any of the variables, as it was expected. Indeed, since it is a projection in a bi-dimensional plane, the data appear more mixed up than they are in reality, especially for classification problems. 
+
+Because of the number of features, we also chose to analyze the correlation matrix.
+
+![correlation matrix no label_distribution](./img/corr_matrix.png)
+
+This plot shows that `tempo` and `beats` are highly correlated, as well as `chroma_stft`, `rmse`, `spectral_centroid`, `spectral_bandwidth`, `roloff`, `zero_crossing_rate` and `mfcc1`, which explains the scatter plot. Features from `mfcc2` to `mfcc20` are weakly correlated.
+
+
+
+Then, we wanted to understand if our dataset had any outliers, so we plot a distance matrix using Euclidean distances, but we didn't find any particular outliers, so there was nothing to be removed.
+
+![distance matrix](./img/distance_matrix.png)
+
+Also, there were no missing values, and our problem was balanced, so we were ready to work with it.
+
+To make our dataset more separable, we decided to transform our data into components where classes were supposed to be more apart from each other.
+
+First, we tried PCA, but since the transformation performed by the ACP does not take into account class information, it was not the most effective for class separation, as it is possible to see in the image below.
+
+![pca](./img/pca.png)
+
+Then, we tried LDA, which was more effective, because it takes class information into account for the transformation, such that, in the new coordinate space, the separation between classes is maximum. After the LDA transformation, the 20 variables reduced to 9, because the number of transformed variables in the LDA is the number of classes of the original problem (10) minus 1.
+
+
+![lda scatter plot](./img/lda_scatter_plot.png)
+
+
+
+With this plot, the separation between classes became more evident, even though the data is not linearly separable.
+
+
+
 ### Results of the linear models
 
 
 
 ### Results of the non-linear models
 
-Grid-search for SVM and MLP:
+**Decision Tree**
+
+Our Decision tree had the lowest accuracy of all the algorithms we used, with 51.5% of accuracy
+
+**Grid-search for SVM and MLP:**
 
 MLP:  0.6086271466227942 -> 0.6524276952805088
+
+
+
+
 
 ### Comparison and discussion of the results
 
