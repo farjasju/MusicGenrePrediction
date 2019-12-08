@@ -56,21 +56,21 @@ Each song is described by the following features:
 
 The tools used in this project are Python and `scikit-learn` along with `pandas` and `numpy` for data analysis, and `matplotlib` for data visualization. 
 
-## Methodology
 
-### Processing and analysis of the data
 
-#### Pre-processing
+## Processing and analysis of the data
+
+### Pre-processing
 
 The main processing of the raw (audio) data has been done upstream, as the dataset already contains the features wanted. 
 
 The processing of the songs is made using the [libROSA](https://librosa.github.io/librosa/) open source library, that allows to extract spectral and rhythm features from audio files. This extraction step will be necessary if we want to add other songs to the dataset.
 
-#### Data exploration
+### Data exploration
 
 At first, we plot the scatter plot, and it was difficult to analyze because of the many variables we're working with. 
 
-#### ![](./img/scatter_plot_original.png)
+![](./img/scatter_plot_original.png)
 
 From the beginning, it seemed that our classes are not easily separable on any of the variables, as it was expected. Indeed, since it is a projection in a bi-dimensional plane, the data appear more mixed up than they are in reality, especially for classification problems. 
 
@@ -103,27 +103,41 @@ Then, we tried LDA, which was more effective, because it takes class information
 
 With this plot, the separation between classes became more evident, even though the data is not linearly separable.
 
-### Choosing the model
+## Choosing the model
 
-#### The mathematical theory behind the models used
+### The mathematical theory behind the models used
 
-##### Random Forest
+#### Decision Tree
 
-##### Naive Bayes
 
-##### Logistic Regression
 
-##### Support Vector Machine (SVM)
+#### Random Forest
 
-##### Decision Tree
 
-##### K-neighbors
 
-##### Gradient boosting
+#### Naive Bayes
 
-##### Multi Layer Perceptron
 
-#### Implementation and comparison of models
+
+#### Logistic Regression
+
+
+
+#### Support Vector Machine (SVM)
+
+
+
+#### K-neighbors
+
+
+
+#### Gradient boosting
+
+
+
+#### Multi Layer Perceptron (MLP)
+
+### Implementation and comparison of models
 
 - List of models: linear/non-linear
 
@@ -133,7 +147,7 @@ With this plot, the separation between classes became more evident, even though 
 
   
 
-#### Adjust of parameters
+### Adjust of parameters
 
 - Grid search
   
