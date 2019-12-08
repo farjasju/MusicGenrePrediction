@@ -107,9 +107,23 @@ With this plot, the separation between classes became more evident, even though 
 
 #### The mathematical theory behind the models used
 
+##### Random Forest
 
+##### Naive Bayes
 
-#### Comparison of models
+##### Logistic Regression
+
+##### Support Vector Machine (SVM)
+
+##### Decision Tree
+
+##### K-neighbors
+
+##### Gradient boosting
+
+##### Multi Layer Perceptron
+
+#### Implementation and comparison of models
 
 - List of models: linear/non-linear
 
@@ -126,10 +140,6 @@ With this plot, the separation between classes became more evident, even though 
 
 ## Results
 
-### Visualization and characterization of the data
-
-
-
 ### Results of the linear models
 
 
@@ -143,6 +153,8 @@ MLP:  0.6086271466227942 -> 0.6524276952805088
 ### Comparison and discussion of the results
 
 - "The best predicted genres are classical and hiphop while the worst predicted are jazz and rock" - Tzanetakis, George & Cook study (2002)
+
+  
 
 ## Conclusions
 
