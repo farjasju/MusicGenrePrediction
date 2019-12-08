@@ -68,7 +68,7 @@ The processing of the songs is made using the [libROSA](https://librosa.github.i
 
 ### Data exploration
 
-At first, we plot the scatter plot, and it was difficult to analyze because of the many variables we're working with. 
+At first, when plotting the scatter plot, the data is difficult to analyze because of the many variables we're working with. 
 
 ![](./img/scatter_plot_original.png)
 
@@ -151,7 +151,7 @@ The minimization of this cost function is done by using *gradient descent*.
 
 ##### Support Vector Machine (SVM) with linear kernel
 
-Support Vector Machines is a family of classifiers whose goal is to find a hyperplane in an N-dimensional space (N being the number of variables) that distinctly classifies the entries.
+Support Vector Machines is a family of classifiers whose goal is to find a **hyperplane** in an N-dimensional space (N being the number of variables) that distinctly classifies the entries.
 
 ![](img/hyperplane.png)
 
@@ -159,9 +159,19 @@ The objective here is to find the hyperplane that maximizes the margin between t
 
 ![](img/svm_margin.png)
 
-The learning of the hyperplane is done by using a *kernel*, that is, in linear SVM, a linear function. Basically, the kernel computes a separation in higher dimension (where the data is linearly separable).
+The separating hyperplane is defined as follows (*w* being a weight vector, *x* the input vector and *b* the biais):
 
-There are many types of kernels the most used being the *linear, polynomial, radial basis function (rbf)* and *sigmoid* ones. The rbf and sigmoid kernels are non-linear, and will be treated in the following section.
+![](img/svm_linear.png)
+
+In order to maximize the margin, we need to minimize *||w||*: it is a constrained optimization problem, that can be solved by the Lagrangian multiplier method.
+
+The learning of the hyperplane is done by using a ***kernel***, that is, in linear SVM, a linear function. Basically, kernel functions are used to map the original dataset into a higher dimensional space (where the data is linearly separable). This is known as the *kernel trick*.
+
+There are many types of kernel functions, the most used being the *linear, polynomial, radial basis function (RBF)* and *sigmoid* ones. Basically, any symmetric positive semi-definite function could be used as a kernel function. The polynomial, RBF and sigmoid kernels are non-linear, and will be treated in the following section.
+
+The linear kernel is defined as follows:
+
+![](img/lin_kernel.png)
 
 #### Non-linear models
 
@@ -175,10 +185,19 @@ There are many types of kernels the most used being the *linear, polynomial, rad
 
 ##### Support Vector Machine (SVM) with non-linear kernel
 
-SVM using the following kernels are non-linear models:
+Non-linear SVM follow the same principle than linear SVm, but use non-linear kernels, most frequently one of the following:
 
-- The Gaussian Radial Basis Function (gaussian rbf) kernel
-- The sigmoid kernel
+- the polynomial kernel
+
+![](img/poli_kernel.png)
+
+- the Gaussian Radial Basis Function (RBF) kernel
+
+  ![](img/rbf_kernel.png)
+
+- the sigmoid kernel
+
+  ![](img/sig_kernel.png)
 
 ##### K-Nearest Neighbors (k-NN)
 
