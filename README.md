@@ -137,7 +137,17 @@ One of the most used Naive Bayes classifiers is the *Gaussian Naive Bayes*, that
 
 ##### Logistic Regression
 
+Logistic Regression is inspired by linear regression, but uses a specific cost function called the *Sigmoid function*, or *logistic function*, that is as follows:
 
+![](img/logistic_function.png)
+
+We can see that the sigmoid function has its values between 0 and 1, so that its output can be considered as a probability. By defining a decision boundary, the output of the function allows to determine if an observation should be classified as belonging to a class or not.
+
+The cost function is also different from the one of a linear regression (to ensure it to be convex), and is defined as follows:
+
+![](img/log_reg_cost_function.png)
+
+The minimization of this cost function is done by using *gradient descent*.
 
 ##### Support Vector Machine (SVM) with linear kernel
 
