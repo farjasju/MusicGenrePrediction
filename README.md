@@ -6,17 +6,19 @@
 
 ![](img/intro.png)
 
-This project has a simple aim: determine the genre of a song based only on its audio characteristics (no meta-data). These characteristics are for example tempo, 
+This project has a simple aim: **determine the genre of a song based only on its audio characteristics** (no meta-data). These characteristics are for example tempo, 
 
-This problem is a *classification* problem: for each song, we need to attribute a class (a genre). Classification problems are solved using *machine learning* approaches, which have proved to be quite successful in extracting trends and patterns from large datasets. More specifically, our problem is a *supervised* classification problem: the model will learn from labeled data (i.e. each example song has a determined genre).
+This problem is a *classification* problem: for each song, we need to attribute a class (a genre). Today, classification problems are solved using *machine learning* approaches, which have proved to be quite successful in extracting trends and patterns from large datasets. More specifically, our problem is a *supervised* classification problem: the model will learn from labeled data (i.e. each example song has a determined genre associated to it).
 
-The possible classes in our problem are: *blues, classical, country, disco, hip-hop, jazz, metal, pop, reggae* & *rock*.
+The classes in our problem are: *blues, classical, country, disco, hip-hop, jazz, metal, pop, reggae* & *rock*.
 
-The whole project is and relies on open source code.
+The whole project is and relies on **open source code**.
 
 ### What has been done before
 
-- Study using a similar dataset, but with no real machine learning technique: Tzanetakis, George & Cook, Perry. (2002). *Musical Genre Classification of Audio Signals*. IEEE Transactions on Speech and Audio Processing. 10. 293 - 302. 10.1109/TSA.2002.800560
+Genre classification is widely used these days, and there are already many studies on the subject. Here are the most similar to ours:
+
+- Well-known study using a similar dataset, but with no real machine learning technique: Tzanetakis, George & Cook, Perry. (2002). *Musical Genre Classification of Audio Signals*. IEEE Transactions on Speech and Audio Processing. 10. 293 - 302. 10.1109/TSA.2002.800560
 - Using this very dataset, a study was made on this [github repository](https://github.com/Insiyaa/Music-Tagging), achieving a 63% accuracy.
 - Out of the 4 public kernels on Kaggle that used this dataset, the best result had 66% accuracy (https://www.kaggle.com/luiscesar/svm-music-classification). 
   
@@ -25,7 +27,30 @@ The whole project is and relies on open source code.
 
 ### The data
 
-The data is available on the *Kaggle* dataset [Music Features](https://www.kaggle.com/insiyeah/musicfeatures), by Insiyah Hajoori. It has been built from 1000 30-second audio tracks of 10 different genres, 100 tracks per genre. Each track is a 22050Hz Mono 16-bit audio file in .wav format, and the features present in the dataset have been extracted from the songs using [libROSA](https://librosa.github.io/librosa/) library.
+The data is available on the *Kaggle* dataset [Music Features](https://www.kaggle.com/insiyeah/musicfeatures), shared by Insiyah Hajoori, first published on [MARSYAS](http://marsyas.info/). 
+
+It has been built from 1000 30-second audio tracks of 10 different genres, 100 tracks per genre. Each track is a 22050Hz Mono 16-bit audio file in .wav format, and the features present in the dataset have been extracted from the songs using [libROSA](https://librosa.github.io/librosa/) library.
+
+![](img/kaggle_dataset.png)
+
+Each song is described by the following features:
+
+**Rhythmic features**
+
+- `tempo` : the speed at which the audio extract is played.
+- `beats` : the rhythmic unit of the song.
+
+**Spectral features**
+
+- `chroma_stft` : *Short Time Fourier Transform* of the extract. Determines the sinusoidal frequency and phase content of local sections of the audio extract.
+- `rmse` : *Root Mean Square* of the song, basically the average volume of the song 
+- `spectral_centroid` : center of mass of the audio spectrum. Can be linked to the brightness of the song.
+- `spectral_bandwidth` : range of frequencies present in the song.
+- `rolloff` : frequency below which a specified percentage of the total spectral energy (e.g. 85%), lies.
+- `zero_crossing_rate` : rate of sign-changes along the signal. Is a key-feature to recognize percussive sounds.
+- `mfcc1`, `mfcc2`, `mfcc3`, ...  : *Mel-frequency cepstral coefficients* of the song extract. Can be seen as the "spectrum-of-the-spectrum".
+
+
 
 ### The tools
 
@@ -134,3 +159,7 @@ MLP:  0.6086271466227942 -> 0.6524276952805088
 ### Possible improvements
 
 - subgenres (hierarchical structure)
+
+------
+
+Course: *Inteligência Computacional (COC 361)* - Universidade Federal do Rio de Janeiro
