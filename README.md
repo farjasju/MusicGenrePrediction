@@ -107,41 +107,71 @@ With this plot, the separation between classes became more evident, even though 
 
 ### The mathematical theory behind the models used
 
-#### Decision Tree
+Given that out problem is a classification problem, the models we will use are called *classifiers*.
+
+#### Linear models
+
+##### Naive Bayes
+
+The Naive Bayes classifier is based on the Bayes theorem:
+
+![](img/bayes_theorem.png)
+
+This theorem allows to find the probability of A happening, given that B has occurred. The main hypothesis of the Naive Bayes classifier is that the features are independent, that is, there is no correlation between the variables (that is why it is called *naive*).
+
+Applied to a dataset, the formula looks like this - with *y* the predicted class and *x1, x2, ...* the variables of the problem:
+
+![](img/bayes_theorem2.png)
+
+We are looking to **maximize this probability**, that is, find the class which *y* has the highest probability to belong to.
+
+The denominator being the same for every entry, we can focus on the numerator.
+
+![](img/bayes_theorem3.png)
+
+Then, the output class will be the one that maximizes this quantity:![](img/bayes_theorem4.png)
+
+One of the most used Naive Bayes classifiers is the *Gaussian Naive Bayes*, that makes the assumption that the variables are normally distributed (i.e. their distribution follow a Gaussian curve). In this case, the probability distribution of *xi* given a class *y* is the following one:
+
+![](img/gaussian_bayes.png)
+
+##### Logistic Regression
 
 
 
-#### Random Forest
+##### Support Vector Machine (SVM) with linear kernel
 
 
 
-#### Naive Bayes
+#### Non-linear models
+
+##### Decision Tree
 
 
 
-#### Logistic Regression
+##### Random Forest
 
 
 
-#### Support Vector Machine (SVM)
+##### Support Vector Machine (SVM) with non-linear kernel
 
 
 
-#### K-neighbors
+##### K-Nearest Neighbors (k-NN)
+
+Non parametric
+
+##### Gradient boosting
 
 
 
-#### Gradient boosting
+##### Multi Layer Perceptron (MLP)
 
 
-
-#### Multi Layer Perceptron (MLP)
 
 ### Implementation and comparison of models
 
-- List of models: linear/non-linear
-
-
+All the models have been implemented using the `scikit-learn` library.
 
 - Cross-validation
 
