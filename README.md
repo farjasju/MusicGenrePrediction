@@ -143,7 +143,7 @@ Logistic Regression is inspired by linear regression, but uses a specific cost f
 
 We can see that the sigmoid function has its values between 0 and 1, so that its output can be considered as a probability. By defining a decision boundary, the output of the function allows to determine if an observation should be classified as belonging to a class or not.
 
-The cost function is also different from the one of a linear regression (to ensure it to be convex), and is defined as follows:
+The cost function is also different from the one of a linear regression (to ensure it to be convex - and be sure to find a global minimum), and is defined as follows:
 
 ![](img/log_reg_cost_function.png)
 
@@ -151,7 +151,17 @@ The minimization of this cost function is done by using *gradient descent*.
 
 ##### Support Vector Machine (SVM) with linear kernel
 
+Support Vector Machines is a family of classifiers whose goal is to find a hyperplane in an N-dimensional space (N being the number of variables) that distinctly classifies the entries.
 
+![](img/hyperplane.png)
+
+The objective here is to find the hyperplane that maximizes the margin between the data points of the 2 classes.
+
+![](img/svm_margin.png)
+
+The learning of the hyperplane is done by using a *kernel*, that is, in linear SVM, a linear function. Basically, the kernel computes a separation in higher dimension (where the data is linearly separable).
+
+There are many types of kernels the most used being the *linear, polynomial, radial basis function (rbf)* and *sigmoid* ones. The rbf and sigmoid kernels are non-linear, and will be treated in the following section.
 
 #### Non-linear models
 
@@ -165,7 +175,10 @@ The minimization of this cost function is done by using *gradient descent*.
 
 ##### Support Vector Machine (SVM) with non-linear kernel
 
+SVM using the following kernels are non-linear models:
 
+- The Gaussian Radial Basis Function (gaussian rbf) kernel
+- The sigmoid kernel
 
 ##### K-Nearest Neighbors (k-NN)
 
