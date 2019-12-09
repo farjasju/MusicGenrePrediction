@@ -219,8 +219,6 @@ All the models have been implemented using the `scikit-learn` library.
 
 ### Visualization and characterization of the data
 
-### Data exploration
-
 At first, when plotting the scatter plot, the data is difficult to analyze because of the many variables we're working with. 
 
 ![](./img/scatter_plot_original.png)
