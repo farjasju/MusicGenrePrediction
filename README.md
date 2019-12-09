@@ -432,7 +432,7 @@ The MLP remained under the best default-parametrized models, with a accuracy of 
 
 - Few training examples
 - Classifications of genres are often arbitrary and controversial
-- The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where classical songs for example are more consistent between each other. This is certainly one of the reasons why the model has more ease to predict accurately classical songs than jazz ones. ("The best predicted genres are classical and hiphop while the worst predicted are jazz and rock" - Tzanetakis, George & Cook study (2002))
+- The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where classical songs for example are more consistent between each other. This is certainly one of the reasons why the model has more ease to predict accurately classical songs than jazz ones. ("*The best predicted genres are classical and hip-hop while the worst predicted are jazz and rock*" - Tzanetakis, George & Cook study (2002))
 
 ### What's the best model?
 
