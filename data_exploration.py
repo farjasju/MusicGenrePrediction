@@ -1,4 +1,5 @@
 import os
+from prettytable import PrettyTable
 
 import matplotlib.pyplot as plt
 from matplotlib import colors as pltclrs
@@ -191,6 +192,8 @@ def subtitle_generator(y_test, y_pred):
 def cross_validation(clf, X, y):
     cv = StratifiedKFold(n_splits=10, random_state=None, shuffle=False)
     scores = cross_val_score(clf, X, y, cv=cv, scoring='accuracy')
+    # ypred = cross_val_predict(clf, X, y, cv=cv)
+    # accuracy = accuracy_score(y, ypred)
     return scores.mean()
 
 
@@ -198,7 +201,7 @@ def main():
     data = pd.read_csv("./data/data.csv")
     data.drop(['filename'], axis=1, inplace=True)
 
-    X = data.iloc[:, 1:-1].values
+    X = data.iloc[:, 0:-1].values
     y = data.iloc[:, -1].values
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.1, random_state=0)
@@ -212,6 +215,13 @@ def main():
     # X_test = lda.transform(X_test)
 
     X_scaled = sc.fit_transform(X)
+    dfxorigin = pd.DataFrame(X_scaled, columns=['tempo', 'beats' ,'chroma_stft' , 'rmse' , 'spectral_centroid' , 'spectral_bandwidth' , 'rolloff' , 'zero_crossing_rate' , 'mfcc1' , 'mfcc2' , 'mfcc3' , 'mfcc4' , 'mfcc5' , 'mfcc6' , 'mfcc7' , 'mfcc8' , 'mfcc9' , 'mfcc10' , 'mfcc11' , 'mfcc12' , 'mfcc13' , 'mfcc14' , 'mfcc15' , 'mfcc16' , 'mfcc17' , 'mfcc18' , 'mfcc19' , 'mfcc20'])
+    
+    t = PrettyTable(['Column Name', 'Min', 'Max', 'Mean', 'Standard Deviation'])
+    for (columnName, columnData) in dfxorigin.iteritems():
+        t.add_row([columnName, columnData.min().round(3), columnData.max().round(3), columnData.mean().round(3), columnData.std().round(3)])
+
+    print (t)
     X_lda = lda.fit_transform(X_scaled, y)
     # data.drop(['label'],axis=1, inplace=True)
     # correlation_matrix(data, 'no label')

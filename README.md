@@ -50,6 +50,84 @@ Each song is described by the following features:
 - `zero_crossing_rate` : rate of sign-changes along the signal. Is a key-feature to recognize percussive sounds.
 - `mfcc1`, `mfcc2`, `mfcc3`, ...  : *Mel-frequency cepstral coefficients* of the song extract. Can be seen as the "spectrum-of-the-spectrum".
 
+We standardized our features, removing their mean and scaling them to unit variance, because we're comparing variables that have different units. Variables at different scales do not contribute equally to the analysis and might end up creating a bias.
+
+**Feature statistics**
+
+Before standardization:
+
+```
++--------------------+----------+----------+----------+--------------------+
+|    Column Name     |   Min    |   Max    |   Mean   | Standard Deviation |
++--------------------+----------+----------+----------+--------------------+
+|       tempo        |  54.978  | 234.908  | 119.602  |       28.297       |
+|       beats        |   18.0   |  117.0   |  57.138  |       14.226       |
+|    chroma_stft     |  0.172   |  0.664   |  0.379   |       0.082        |
+|        rmse        |  0.005   |  0.398   |  0.131   |       0.066        |
+| spectral_centroid  | 569.931  | 4434.439 | 2201.834 |      715.961       |
+| spectral_bandwidth | 897.994  | 3509.579 | 2242.56  |      526.338       |
+|      rolloff       | 749.062  | 8676.406 | 4571.702 |      1574.77       |
+| zero_crossing_rate |  0.022   |  0.275   |  0.104   |       0.042        |
+|       mfcc1        | -552.064 |  42.035  | -144.479 |      100.236       |
+|       mfcc2        |  -1.527  | 193.097  |  99.552  |       31.332       |
+|       mfcc3        | -89.901  |  56.666  |  -8.922  |       21.695       |
+|       mfcc4        | -18.768  |  80.691  |  36.293  |       16.667       |
+|       mfcc5        | -38.903  |  31.462  |  -1.147  |       12.223       |
+|       mfcc6        | -28.425  |  45.173  |  14.634  |       11.841       |
+|       mfcc7        | -32.934  |  21.836  |  -5.13   |       9.942        |
+|       mfcc8        | -24.948  |  49.019  |  10.12   |       10.464       |
+|       mfcc9        | -31.653  |  19.129  |  -6.996  |       8.284        |
+|       mfcc10       | -12.051  |  27.217  |   7.73   |       7.938        |
+|       mfcc11       | -28.052  |  17.421  |  -6.021  |       6.819        |
+|       mfcc12       | -15.805  |  23.038  |  4.472   |       6.717        |
+|       mfcc13       | -27.542  |  13.054  |  -4.797  |       6.171        |
+|       mfcc14       | -12.599  |  18.162  |  1.782   |       5.009        |
+|       mfcc15       | -17.545  |  12.358  |  -3.87   |       4.874        |
+|       mfcc16       | -15.694  |  13.469  |  1.148   |       4.579        |
+|       mfcc17       | -17.228  |  11.49   |  -3.967  |       4.551        |
+|       mfcc18       | -11.976  |  15.379  |  0.507   |       3.869        |
+|       mfcc19       | -18.504  |  14.687  |  -2.329  |       3.756        |
+|       mfcc20       | -19.935  |  15.369  |  -1.095  |       3.838        |
++--------------------+----------+----------+----------+--------------------+
+```
+
+After standardization:
+
+```
++--------------------+--------+-------+------+--------------------+
+|    Column Name     |  Min   |  Max  | Mean | Standard Deviation |
++--------------------+--------+-------+------+--------------------+
+|       tempo        | -2.285 | 4.077 | 0.0  |       1.000        |
+|       beats        | -2.753 |  4.21 | 0.0  |       1.000        |
+|    chroma_stft     | -2.534 |  3.49 | 0.0  |       1.000        |
+|        rmse        | -1.914 | 4.068 | 0.0  |       1.000        |
+| spectral_centroid  | -2.28  |  3.12 | 0.0  |       1.000        |
+| spectral_bandwidth | -2.556 | 2.408 | 0.0  |       1.000        |
+|      rolloff       | -2.429 | 2.608 | 0.0  |       1.000        |
+| zero_crossing_rate | -1.96  | 4.094 | 0.0  |       1.000        |
+|       mfcc1        | -4.068 | 1.862 | 0.0  |       1.000        |
+|       mfcc2        | -3.228 | 2.987 | 0.0  |       1.000        |
+|       mfcc3        | -3.734 | 3.025 | 0.0  |       1.000        |
+|       mfcc4        | -3.305 | 2.665 | 0.0  |       1.000        |
+|       mfcc5        | -3.091 | 2.669 | 0.0  |       1.000        |
+|       mfcc6        | -3.638 |  2.58 | 0.0  |       1.000        |
+|       mfcc7        | -2.798 | 2.714 | 0.0  |       1.000        |
+|       mfcc8        | -3.353 | 3.719 | 0.0  |       1.000        |
+|       mfcc9        | -2.978 | 3.155 | 0.0  |       1.000        |
+|       mfcc10       | -2.493 | 2.456 | 0.0  |       1.000        |
+|       mfcc11       | -3.232 | 3.439 | 0.0  |       1.000        |
+|       mfcc12       | -3.02  | 2.765 | 0.0  |       1.000        |
+|       mfcc13       | -3.688 | 2.894 | 0.0  |       1.000        |
+|       mfcc14       | -2.872 | 3.271 | 0.0  |       1.000        |
+|       mfcc15       | -2.807 | 3.331 | 0.0  |       1.000        |
+|       mfcc16       | -3.68  | 2.692 | 0.0  |       1.000        |
+|       mfcc17       | -2.915 | 3.398 | 0.0  |       1.000        |
+|       mfcc18       | -3.228 | 3.846 | 0.0  |       1.000        |
+|       mfcc19       | -4.309 | 4.533 | 0.0  |       1.000        |
+|       mfcc20       | -4.912 | 4.292 | 0.0  |       1.000        |
++--------------------+--------+-------+------+--------------------+
+```
+
 ### The tools
 
 ![](img/tools.png)
@@ -65,8 +143,6 @@ The tools used in this project are Python and `scikit-learn` along with `pandas`
 The main processing of the raw (audio) data has been done upstream, as the dataset already contains the features wanted. 
 
 The processing of the songs is made using the [libROSA](https://librosa.github.io/librosa/) open source library, that allows to extract spectral and rhythm features from audio files. This extraction step will be necessary if we want to add other songs to the dataset.
-
-We also used the `sklearn.preprocessing` method StandardScaler to standardize features, by removing their mean and scaling them to unit variance.
 
 ## Choosing the model
 
@@ -236,15 +312,18 @@ for classifier in classifiers:
     cross_validation(classifier, X, y, random_state=42)
 ```
 
-This cross validation routine allows to compare the performance of the models, tuned with default or simple parameters, and thus determine which one is the 
+This cross validation routine allows to compare the performance of the models, tuned with default or simple parameters, and thus determine which one is the "apparently best" model. The accuracy score for one specific classifier is calculated using the mean value of the scores obtained for each fold. 
 
-This comparison gave a quick idea on the most adapted models for our problem.
+We also tried to concatenate all labels predicted by the cross validation and then compare them with the original labels from the dataset, to get an accuracy score based on all the 1,000 entries instead of 100 entries on each fold, but surprisingly, this didn't give us better results -- the scores remained the same.
 
-The next step is to choose the "apparently best" of them, and tune their parameters to reach better performance.
+This overall comparison gave us a quick idea on the most adapted models for our problem.
 
-### Adjust of parameters
+The next step was to choose the "apparently best models", and tune their parameters to reach better performance.
 
-Once the "apparently best" model has been chosen, one would like to find the set of parameters that optimize the performance of the model for the problem we're dealing with. These parameters are in fact called *hyper-parameters*, in opposition to the parameters of the cost-function that are optimized during the learning process
+### Parameter tuning
+
+Once the "apparently best" models have been chosen, one would like to find the set of parameters that can optimize their performance for the problem we're dealing with. These parameters are in fact called *hyper-parameters*, in opposition to the parameters of the cost-function that are optimized during the learning process. More on the parameter tuning for each model will be described in the Results section.
+
 
 ## Results
 
