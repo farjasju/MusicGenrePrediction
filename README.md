@@ -345,7 +345,7 @@ After the LDA transformation:
 
 ```
 0.679 Random Forest · 350 estimators
-0.700 SVC · kernel='rbf' · gamma='0.01' · C=1
+0.700 SVC · kernel='rbf' · gamma='0.0001' · C=1
 0.560 Decision Tree · Entropy · max_depth=8 
 0.682 Knn · 28 neighbors
 0.654 MLP · hidden_layer_sizes=(20,20,20) · activation='tanh' · solver='adam' · 'learning_rate': 'adaptive'
