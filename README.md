@@ -515,7 +515,7 @@ The MLP remained under the best default-parametrized models, with a accuracy of 
 
 ### What's the best model?
 
-
+The **SVM with rbf kernel**, tuned with optimal parameters, reached the best performance on the validation datasets, with a 70% accuracy. This performance still needs to be confirmed on a test dataset, for example with new data generated using [libROSA](https://librosa.github.io/librosa/) library.
 
 ### Possible improvements
 
