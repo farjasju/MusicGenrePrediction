@@ -158,6 +158,8 @@ The Random Forest algorithms creates an ensemble of decision trees, in most case
 Differently from the Decision Tree, that usually uses information gain and entropy calculations, Random Forest does this at random. Another difference is that, while deep decision trees can suffer from overfitting,  Random Forests avoid overfitting in most cases. The overfitting is lower because RFs work with random subsets of features and build smaller trees from such subsets. After training, the subtrees are combined.
 
 
+
+
 ##### Support Vector Machine (SVM) with non-linear kernel
 
 Non-linear SVM follow the same principle than linear SVM, but use non-linear kernels, most frequently one of the following:
