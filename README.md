@@ -175,6 +175,15 @@ Non-linear SVM follow the same principle than linear SVM, but use non-linear ker
 - the sigmoid kernel
 
   ![](img/sig_kernel.png)
+  
+
+The SVM with RBF kernel is the most used because of its good performance and adaptability to various datasets.
+
+It has two main hyper-parameters: C and gamma.
+
+**C** is a factor controlling the cost of misclassification on the training data. Therefore, a small C (C << 1) means a more simple model, allowing more misclassified entries but limiting the risk of over-fitting. On the contrary, a large C (C > 1) forces the model to explain strictly the entries by reaching a really low misclassification rate, potentially over-fitting. 
+
+**Gamma** is the parameter of the Gaussian radial basis function (1/2sigma² here). A very small gamma will constrain the model and cause a large variance, where a large gamma will lower the variance but raise the bias.
 
 ##### K-Nearest Neighbors (k-NN)
 
@@ -206,16 +215,32 @@ Each network layer has a specific function. The output layer receives stimuli fr
 
 All the models have been implemented using the `scikit-learn` library.
 
-- Cross-validation
+To compare the models while using cross-validation, we used the `StratifiedKFold` function to generate the K-folds of the cross validation process. 
 
-  
+To ensure the train and validation datasets are the same for each model, we set the `random_state` at a constant value for each comparison. 
+
+``` python
+# Simplified code for the cross-validation process
+def cross_validation(clf, X, y, random_state):
+    cv = StratifiedKFold(n_splits=10, random_state=random_state, shuffle=False)
+    scores = cross_val_score(clf, X, y, cv=cv, scoring='accuracy')
+    return scores.mean()
+
+classifiers = [SVC(kernel='poly'), SVC(kernel='rbf'), kNN(n=7), ...]
+
+for classifier in classifiers:
+    cross_validation(classifier, X, y, random_state=42)
+```
+
+This cross validation routine allows to compare the performance of the models, tuned with default or simple parameters, and thus determine which one is the 
+
+This comparison gave a quick idea on the most adapted models for our problem.
+
+The next step is to choose the "apparently-best" of them, and tune their parameters to reach better performance.
 
 ### Adjust of parameters
 
-- Grid search
-  
-
-
+Once the "apparently-best" model has been chosen, one would like to find the set of parameters that optimize the performance of the model for the problem we're dealing with. These parameters are in fact called *hyper-parameters*, in opposition to the parameters of the cost-function that are optimized during the learning process
 
 ## Results
 
@@ -223,7 +248,7 @@ All the models have been implemented using the `scikit-learn` library.
 
 At first, when plotting the scatter plot, the data is difficult to analyze because of the many variables we're working with. 
 
-![](./img/scatter_plot_original.png)
+![](./img/scatter_plot_original_small.png)
 
 From the beginning, it seemed that our classes are not easily separable on any of the variables, as it was expected. Indeed, since it is a projection in a bi-dimensional plane, the data appear more mixed up than they are in reality, especially for classification problems. 
 
@@ -258,7 +283,34 @@ With this plot, the separation between classes became more evident, even though 
 
 
 
-### Results of the linear models
+### Results of the trained models
+
+Thanks to the cross validation routine, we could compare the performance of the models, tuned with simple parameters:
+
+```
+0.639 Random Forest · 100 estimators
+0.421 Naive Bayes
+0.629 Logistic Regression · Solver:'sag'
+0.650 Linear SVM
+0.553 SVC · kernel='poly' · degree=2 · gamma='scale'
+0.663 SVC · kernel='rbf' · gamma='scale' · C=1
+0.462 SVC · kernel='sigmoid' · gamma='scale'
+0.492 Decision Tree 
+0.619 Knn · 5 neighbors
+0.624 Knn · 7 neighbors
+0.632 Knn · 9  neighbors
+0.573 MLP · hidden_layer_sizes=(8,8,8) · activation='relu' · solver='adam' · max_iter=3000
+```
+
+The scores printed here are the f1 scores of each model.
+
+Given this first comparison, the model that seemed to work best with our data was the *SVC with rbf kernel*. We also were surprised by the low performance of the Multi-Layer Perceptron , and wanted to see if it could go better with more adapted parameters. 
+
+We applied a Grid Search to both models, and both improved their accuracy.
+
+The MLP remained under the best default-parametrized models, with a f1 score of 0.65. The SVC with rbf kernel, already the best one, improved even more.
+
+#### Linear models
 
 **Naive Bayes**
 
@@ -272,9 +324,7 @@ The Logistic Regression algorithm gave us an accuracy of 62.9% without the LDA a
 
 The SVM with linear kernel algorithm gave us an accuracy of 65.1% without the LDA and 67.3% with the LDA. As expected, using a linear kernel, it has performed comparably to the Logistic Regression.
 
-
-
-### Results of the non-linear models
+#### Non-linear models
 
 **Decision Tree**
 
@@ -309,23 +359,15 @@ Without LDA, out best result was with 8 neighbors, providing an accuracy of 63.8
 
 **Support Vector Machine (SVM) with RBF (Gaussian) kernel**
 
-70.0% with gamma='scale' and C=1 (LDA)
+Using a grid search, we could find the best set of parameters C and gamma, and reached a 70% accuracy (68,6% without the LDA step).
 
-68.6% with gamma=0.1 and C=1 (original dataset)
+![](img/svm_parameters_grid_search.png)
 
 **Support Vector Machine (SVM) with sigmoid kernel**
 
 63.5% with gamma='scale' (LDA)
 
 46.2% with gamma='scale' (original dataset)
-
-**Grid-search for SVM and MLP:**
-
-MLP:  0.6086271466227942 -> 0.6524276952805088
-
-
-
-
 
 ### Comparison and discussion of the results
 
