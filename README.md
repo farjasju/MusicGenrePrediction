@@ -351,7 +351,7 @@ After the LDA transformation:
 
 
 
-The MLP remained under the best default-parametrized models, with a accuracy of 65%. The SVC with rbf kernel, already the best one, improved even more, as described below.
+The MLP remained under the best default-parametrized models, with an accuracy of 65%. The SVC with rbf kernel, already the best one, improved even more, as described below.
 
 
 
@@ -408,7 +408,7 @@ Without LDA, out best result was with 8 neighbors, providing an accuracy of 63.8
 
 **Support Vector Machine (SVM) with RBF (Gaussian) kernel**
 
-Using a grid search, we could find the best set of parameters C and gamma, and **reached a 70% accuracy** (68,6% without the LDA step). Abaixo segue um examplo do gráfico da GridSearch para o dataset original.
+Using a grid search, we could find the best set of parameters C and gamma, and **reached a 70% accuracy** (68,6% without the LDA step). Here is the result of the Grid-Search function we wrote, applied to the original dataset:
 
 ![](img/svm_parameters_grid_search.png)
 
@@ -426,7 +426,7 @@ Using a grid search, we could find the best set of parameters C and gamma, and *
 
 - Few training examples
 - Classifications of genres are often arbitrary and controversial
-- The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where classical songs for example are more consistent between each other. This is certainly one of the reasons why the model has more ease to predict accurately classical songs than jazz ones. ("The best predicted genres are classical and hiphop while the worst predicted are jazz and rock" - Tzanetakis, George & Cook study (2002))
+- The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where classical songs for example are more consistent between each other. This is certainly one of the reasons why the model has more ease to predict accurately classical songs than jazz ones. ("*The best predicted genres are classical and hip-hop while the worst predicted are jazz and rock*" - Tzanetakis, George & Cook study (2002))
 
 ### What's the best model?
 
