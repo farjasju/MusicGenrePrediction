@@ -140,15 +140,27 @@ The linear kernel is defined as follows:
 
 ##### Decision Tree
 
+Decision trees are statistical models that use supervised training for data classification and prediction. For its construction, a training set consisting of inputs and outputs is used, in which the outputs are the classes.
+The process of building the tree model is called induction, and may require a lot of computational power. The purpose of the decision tree is to make several divisions of the data into subsets, so that the subsets become increasingly pure. 
 
+In other words, decision trees are split on the feature and split point that result in the largest information gain (IG) for a given criterion (Gini or Entropy, for example).
+
+<img src="./img/information_gain.png" alt="impurity_criterion" style="zoom:30%;" />
+
+Where the impurity can be:
+
+<img src="./img/impurity_criterion.png" alt="impurity_criterion" style="zoom:30%;" />
 
 ##### Random Forest
 
+The Random Forest algorithms creates an ensemble of decision trees, in most cases, trained with the bagging method. The main idea of the bagging method is that the combination of learning models increases the overall result. Simply put: the random forest algorithm creates several decision trees and combines them to obtain a more accurate and more stable prediction.
+
+Differently from the Decision Tree, that usually uses information gain and entropy calculations, Random Forest does this at random. Another difference is that, while deep decision trees can suffer from overfitting,  Random Forests avoid overfitting in most cases. The overfitting is lower because RFs work with random subsets of features and build smaller trees from such subsets. After training, the subtrees are combined.
 
 
 ##### Support Vector Machine (SVM) with non-linear kernel
 
-Non-linear SVM follow the same principle than linear SVm, but use non-linear kernels, most frequently one of the following:
+Non-linear SVM follow the same principle than linear SVM, but use non-linear kernels, most frequently one of the following:
 
 - the polynomial kernel
 
@@ -164,21 +176,29 @@ Non-linear SVM follow the same principle than linear SVm, but use non-linear ker
 
 ##### K-Nearest Neighbors (k-NN)
 
-Non parametric
+KNN is a nonparametric algorithm, and the model structure will be determined by the used dataset. This algorithm is also known as slow learning or a lazy algorithm. Lazy algorithms do not require training data to generate the model, which speeds up the initial process, but in turn will generate a need for further analysis. 
 
-##### Gradient boosting
+In this algorithm we have a variable called K, which is the main parameter to be selected. This parameter will decide the number of neighbors. If we have a value "P" that we want to know which class it belongs to, first we identify the closest point to it and then which class it's in. After identifying the nearest point and its class, we will predict in which class the point "P" belongs. In order to do that, a poll is conducted, and the majority of points will tell which class this point "P" actually belongs to.
+
+KNN’s main disadvantage is becoming slower as the volume of data increases, which makes it an impractical choice in environments where predictions need to be made rapidly.
 
 
 
 ##### Multi Layer Perceptron (MLP)
 
-A multilayer perceptron (MLP) is a neural network similar to the simple perceptron, but has more than one layer of neurons. The MLP is used when the classes are not linearly separable, and it generates more than one classifying line.
+To understand a multi layer perceptron, first, it's important to understand what a perceptron is. A perceptron, or neuron, is a node that processes signals inside a network. It sums up the inputs multiplied by their weights, and adds a bias (that provides one more degree of freedom), to produce a weighted net sum. This sum is then applied to an activation function, which standardizes the value, producing an output of 0 or 1. 
 
-Learning in this type of network is usually done through the error backpropagation algorithm, but there are other algorithms for this purpose.
+These perceptrons can form a network of multiple layers, working together to successfully classify inputs, by passing to the following layer the information on whether a feature is present (1) or not (0), and then this next layer will process the information received from the previous one. That is what constitutes a Multi Layer Perceptron (MLP)
 
-Each network layer has a specific function. The output layer receives stimuli from the intermediate layer and builds the response.
+The MLP is used when classes are not linearly separable, and this model generates more than one classifying line.
 
-![mlp](/Users/luisfernandolins/MusicGenrePrediction/img/mlp.jpg)
+Learning in this type of network is usually done with the aid of the error backpropagation algorithm, but there are other algorithms for this purpose.
+
+Each network layer has a specific function. The output layer receives stimuli from the last of the intermediate layers and builds the response.
+
+<img src="./img/mlp.jpg" alt="mlp" style="zoom:60%;" />
+
+
 
 ### Implementation and comparison of models
 
@@ -192,6 +212,8 @@ All the models have been implemented using the `scikit-learn` library.
 
 - Grid search
   
+
+
 
 ## Results
 
@@ -238,13 +260,64 @@ With this plot, the separation between classes became more evident, even though 
 
 ### Results of the linear models
 
+**Naive Bayes**
+
+The Naive Bayes algorithm gave us an accuracy of 42.1% without the LDA and 66.0% with the LDA. This increase of accuracy can be explained because some of the original variables very correlated, and the Naive Bayes algorithm assumes the features are independent, so after the LDA transformation, the 9 new variables are less correlated, and thus, the algorithm works better. Neither of these results is optimal, though, because we used the Gaussian Naive Bayes, which assumes that the variables have a Gaussian distribution and while most of them are distributed that way, not all of them are.
+
+**Logistic Regression**
+
+The Logistic Regression algorithm gave us an accuracy of 62.9% without the LDA and 67.6% with the LDA. It is not that bad without the LDA because this algorithm does not assume that the features are not correlated, so that is not a problem.
+
+**Support Vector Machine (SVM) with linear kernel**
+
+The SVM with linear kernel algorithm gave us an accuracy of 65.1% without the LDA and 67.3% with the LDA. As expected, using a linear kernel, it has performed comparably to the Logistic Regression.
+
 
 
 ### Results of the non-linear models
 
 **Decision Tree**
 
-Our Decision tree had the lowest accuracy of all the algorithms we used, with 51.5% of accuracy
+Our Decision tree had the lowest accuracy of all the algorithms we used, with 56.0% of accuracy with LDA and 50.8% without it. 
+
+On the original dataset (before LDA transformation), the best parameters were maximum depth of 17 and Gini as criterion.
+
+For the LDA, we tuned the parameters of criterion and maximum tree depth, and got this result of 56.0% using maximum depth of 8 and Entropy as criterion. 
+
+It makes sense that the optimum depth is bigger on the original dataset than on the LDA-transformed one, because it has more variables (20), while the LDA-transformed one has only 9.
+
+**Random Forest**
+
+The Random Forest algorithm provided an accuracy of 65.9% on the original dataset and 67.9% on the LDA-transformed dataset.
+
+The parameter tuning was made only by changing the number of forests, and the best parameter was 200 forests for the original dataset and 350 for the one with LDA. 
+
+It is important to notice that, on the dataset with LDA, the difference of accuracy between 200 forests (67.7% acc) and 350 (67.9% acc) was 0.2%, so even though the result might have become a little bit more accurate with even more forests, the improvement probably wouldn't be enough to justify spending the additional computational resources and time for the calculation of more forests.
+
+**KNN**
+
+For the KNN algorithm, we ran the algorithm many times with cross validation technique, and changing the number of neighbors from 1 to 30, both with LDA and without LDA. We found the best number of neighbors for this algorithm in our dataset to be 28 neighbors, which provided an accuracy of 68.2% with the LDA.
+
+Since 28 is not a small number for our 1000-entry dataset, we considered it safe enough to think of this as a valid result, as overfitting in KNN usually happens when the number of neighbors is too low.
+Without LDA, out best result was with 8 neighbors, providing an accuracy of 63.8%.
+
+**Support Vector Machine (SVM) with polynomial kernel**
+
+62.9% with degree=2 and gamma='scale' (LDA)
+
+55.3% with degree=2 and gamma='scale' (original dataset)
+
+**Support Vector Machine (SVM) with RBF (Gaussian) kernel**
+
+70.0% with gamma='scale' and C=1 (LDA)
+
+68.6% with gamma=0.1 and C=1 (original dataset)
+
+**Support Vector Machine (SVM) with sigmoid kernel**
+
+63.5% with gamma='scale' (LDA)
+
+46.2% with gamma='scale' (original dataset)
 
 **Grid-search for SVM and MLP:**
 

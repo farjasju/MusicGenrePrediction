@@ -347,7 +347,7 @@ def main():
     # classifier 9 - Decision tree
 
     classifier = tree.DecisionTreeClassifier()
-    title = title_generator(["Decision Tree"])
+    title = title_generator(["Decision Tree "])
     classifiers.append({'title': title, 'model': classifier})
     # model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     # subtitle = subtitle_generator(y_test, y_pred)
@@ -377,7 +377,7 @@ def main():
     # classifier 12 - KNN 9 neighbors
 
     classifier = KNeighborsClassifier(n_neighbors=9)
-    title = title_generator(["Knn", "9 neighbors"])
+    title = title_generator(["Knn", "9  neighbors"])
     classifiers.append({'title': title, 'model': classifier})
     # model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     # subtitle = subtitle_generator(y_test, y_pred)
@@ -408,23 +408,23 @@ def main():
     # plot_confusion_matrix(cm, show=False, save=True, filename='mlp', title=title, subtitle=subtitle)
     # print(cross_validation(classifier, X_lda, y), title)
 
-    # ## classifier 15 - MLP tweaked
-    # parameter_space = {
-    #     'hidden_layer_sizes': [(10,10,10), (20, 20, 20), (10, 20, 10)],
-    #     'activation': ['tanh', 'relu'],
-    #     'solver': ['sgd', 'adam'],
-    #     'alpha': [0.0001, 0.05],
-    #     'learning_rate': ['constant', 'adaptive'],
-    # }
-    # mlp = MLPClassifier(hidden_layer_sizes=(
-    #     8, 8, 8), activation='relu', solver='adam', max_iter=3000, random_state=2)
-    # classifier = GridSearchCV(mlp, parameter_space, n_jobs=7, cv=3)
-    # title = title_generator(["MLP", "tweaked parameters (with a grid search)"])
-    # classifiers.append({'title': title, 'model': classifier})
+    ## classifier 15 - MLP tweaked
+    parameter_space = {
+        'hidden_layer_sizes': [(10,10,10), (20, 20, 20), (10, 20, 10)],
+        'activation': ['tanh', 'relu'],
+        'solver': ['sgd', 'adam'],
+        'alpha': [0.0001, 0.05],
+        'learning_rate': ['constant', 'adaptive'],
+    }
+    mlp = MLPClassifier(hidden_layer_sizes=(
+        8, 8, 8), activation='relu', solver='adam', max_iter=3000, random_state=2)
+    classifier = GridSearchCV(mlp, parameter_space, n_jobs=7, cv=10)
+    title = title_generator(["MLP", "tweaked parameters (with a grid search)"])
+    classifiers.append({'title': title, 'model': classifier})
 
     for classifier in classifiers:
         print(cross_validation(
-            classifier['model'], X_lda, y), classifier['title'])
+            classifier['model'], X_scaled, y), classifier['title'])
 
     ################################
 
