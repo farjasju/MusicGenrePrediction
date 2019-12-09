@@ -410,7 +410,7 @@ Without LDA, out best result was with 8 neighbors, providing an accuracy of 63.8
 
 **Support Vector Machine (SVM) with RBF (Gaussian) kernel**
 
-Using a grid search, we could find the best set of parameters C and gamma, and **reached a 70% accuracy** (68,6% without the LDA step). Abaixo segue um examplo do gráfico da GridSearch para o dataset original.
+Using a grid search, we could find the best set of parameters C and gamma, and **reached a 70% accuracy** (68,6% without the LDA step). Here is an example of the Grid Search for the original dataset. There is no graph for the GridSearch for the LDA-transformed dataset because the Grid Search for SVM only works with numerical values of gamma, and the best result was with gamma='scale', so all results found with the Grid Search were less than optimal.
 
 ![](img/svm_parameters_grid_search.png)
 
