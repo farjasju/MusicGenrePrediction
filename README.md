@@ -345,15 +345,11 @@ After the LDA transformation:
 
 ```
 0.679 Random Forest · 350 estimators
-0.700 SVC · kernel='rbf' · gamma='scale' · C=1 (did not change after parameter tuning but is 																									here for sake of comparison)
+0.700 SVC · kernel='rbf' · gamma='0.01' · C=1
 0.560 Decision Tree · Entropy · max_depth=8 
 0.682 Knn · 28 neighbors
 0.654 MLP · hidden_layer_sizes=(20,20,20) · activation='tanh' · solver='adam' · 'learning_rate': 'adaptive'
 ```
-
-
-
-The MLP remained under the best default-parametrized models, with a accuracy of 65.4%. 
 
 
 
@@ -410,7 +406,9 @@ Without LDA, out best result was with 8 neighbors, providing an accuracy of 63.8
 
 **Support Vector Machine (SVM) with RBF (Gaussian) kernel**
 
-Using a grid search, we could find the best set of parameters C and gamma, and **reached a 70% accuracy** (68,6% without the LDA step). Here is an example of the Grid Search for the original dataset. There is no graph for the GridSearch for the LDA-transformed dataset because the Grid Search for SVM only works with numerical values of gamma, and the best result was with gamma='scale', so all results found with the Grid Search were less than optimal.
+Using a grid search, we were able find the best set of parameters C and gamma, and **reached a 70% accuracy** (69.7% without the LDA step). Here is an example of the Grid Search for the original dataset.
+
+For the LDA, the best result we achieved (70%) was with gamma='0.001', which is equivalent to the 'scale' parameter, and C=1. The Grid Search also optimized the results for the original dataset, going from 66.3% to 69.7% when using gamma=0.1 and C=1.7.
 
 ![](img/svm_parameters_grid_search.png)
 
@@ -419,6 +417,12 @@ Using a grid search, we could find the best set of parameters C and gamma, and *
 63.5% with gamma='scale' (LDA)
 
 46.2% with gamma='scale' (original dataset)
+
+
+
+**Multi Layer Perceptron**
+
+The MLP remained under the best default-parametrized models, with a accuracy of 65.4% for the LDA-transformed dataset and 64.2% for the original dataset. 
 
 
 

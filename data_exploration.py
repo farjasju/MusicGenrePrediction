@@ -331,12 +331,12 @@ def main():
     # classifier 7 bis - SVC gaussian kernel (best so far) - tweaked parameters
 
     parameter_space = {
-        'gamma': [0.001, 0.01, 0.1, 0.25, 0.5, 0.75, 1.0],
+        'gamma': [0.0001, 0.001, 0.01, 0.1, 0.25, 0.5, 0.75, 1.0],
         'C': [0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9],
     }
     svc = SVC(kernel='rbf', random_state=0)
     classifier = GridSearchCV(svc, parameter_space, n_jobs=7, cv=10)
-    params = classifier.fit(X_scaled,y).best_params_
+    params = classifier.fit(X_lda,y).best_params_
     title = title_generator(["SVC", "tweaked parameters (with a grid search)", params])
     classifiers.append({'title': title, 'model': classifier})
 
@@ -404,32 +404,32 @@ def main():
 
     # classifier 14 - Neural Network
 
-    classifier = MLPClassifier(hidden_layer_sizes=(
-        8, 8, 8), activation='relu', solver='adam', max_iter=3000, random_state=2)
-    title = title_generator(["MLP", "hidden_layer_sizes=(8,8,8)",
-                             "activation='relu'", "solver='adam'", "max_iter=3000"])
-    classifiers.append({'title': title, 'model': classifier})
+    # classifier = MLPClassifier(hidden_layer_sizes=(
+    #     8, 8, 8), activation='relu', solver='adam', max_iter=3000, random_state=2)
+    # title = title_generator(["MLP", "hidden_layer_sizes=(8,8,8)",
+    #                          "activation='relu'", "solver='adam'", "max_iter=3000"])
+    # classifiers.append({'title': title, 'model': classifier})
     # model, y_pred, cm = run_classifier(classifier, X_train, X_test, y_train, y_test)
     # subtitle = subtitle_generator(y_test, y_pred)
     # plot_confusion_matrix(cm, show=False, save=True, filename='mlp', title=title, subtitle=subtitle)
     # print(cross_validation(classifier, X_lda, y), title)
 
     ## classifier 15 - MLP tweaked
-    parameter_space = {
-        'hidden_layer_sizes': [(10,10,10), (20, 20, 20), (10, 20, 10)],
-        'activation': ['tanh', 'relu'],
-        'solver': ['sgd', 'adam'],
-        'learning_rate': ['constant', 'adaptive'],
-    }
-    mlp = MLPClassifier()
-    classifier = GridSearchCV(mlp, parameter_space, n_jobs=7, cv=10)
-    params = classifier.fit(X_scaled,y).best_params_
-    title = title_generator(["MLP", "tweaked parameters (with a grid search)", params])
-    classifiers.append({'title': title, 'model': classifier})
+    # parameter_space = {
+    #     'hidden_layer_sizes': [(7,7), (10,10), (15,15), (20, 20, 20)],
+    #     'activation': ['tanh', 'relu'],
+    #     'solver': ['sgd', 'adam'],
+    #     'learning_rate': ['constant', 'adaptive'],
+    # }
+    # mlp = MLPClassifier()
+    # classifier = GridSearchCV(mlp, parameter_space, n_jobs=7, cv=10)
+    # params = classifier.fit(X_scaled,y).best_params_
+    # title = title_generator(["MLP", "tweaked parameters (with a grid search)", params])
+    # classifiers.append({'title': title, 'model': classifier})
 
     for classifier in classifiers:
         print(cross_validation(
-            classifier['model'], X_scaled, y), classifier['title'])
+            classifier['model'], X_lda, y), classifier['title'])
 
     ################################
 
