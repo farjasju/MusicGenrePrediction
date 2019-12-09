@@ -330,8 +330,14 @@ def main():
 
     # classifier 7 bis - SVC gaussian kernel (best so far) - tweaked parameters
 
-    classifier = SVC(kernel='rbf', gamma=0.04, random_state=0, C=1.1)
-    title = title_generator(["SVC", "kernel='rbf'", "gamma=0.04", "C=1.1"])
+    parameter_space = {
+        'gamma': [0.001, 0.01, 0.1, 0.25, 0.5, 0.75, 1.0],
+        'C': [0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9],
+    }
+    svc = SVC(kernel='rbf', random_state=0)
+    classifier = GridSearchCV(svc, parameter_space, n_jobs=7, cv=10)
+    params = classifier.fit(X_scaled,y).best_params_
+    title = title_generator(["SVC", "tweaked parameters (with a grid search)", params])
     classifiers.append({'title': title, 'model': classifier})
 
     # classifier 8 - SVC sigmoid kernel
@@ -413,18 +419,17 @@ def main():
         'hidden_layer_sizes': [(10,10,10), (20, 20, 20), (10, 20, 10)],
         'activation': ['tanh', 'relu'],
         'solver': ['sgd', 'adam'],
-        'alpha': [0.0001, 0.05],
         'learning_rate': ['constant', 'adaptive'],
     }
     mlp = MLPClassifier()
     classifier = GridSearchCV(mlp, parameter_space, n_jobs=7, cv=10)
-    params = classifier.fit(X_lda,y).best_params_
+    params = classifier.fit(X_scaled,y).best_params_
     title = title_generator(["MLP", "tweaked parameters (with a grid search)", params])
     classifiers.append({'title': title, 'model': classifier})
 
     for classifier in classifiers:
         print(cross_validation(
-            classifier['model'], X_lda, y), classifier['title'])
+            classifier['model'], X_scaled, y), classifier['title'])
 
     ################################
 

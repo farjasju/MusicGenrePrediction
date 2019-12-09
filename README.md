@@ -66,6 +66,8 @@ The main processing of the raw (audio) data has been done upstream, as the datas
 
 The processing of the songs is made using the [libROSA](https://librosa.github.io/librosa/) open source library, that allows to extract spectral and rhythm features from audio files. This extraction step will be necessary if we want to add other songs to the dataset.
 
+We also used the `sklearn.preprocessing` method StandardScaler to standardize features, by removing their mean and scaling them to unit variance.
+
 ## Choosing the model
 
 ### The mathematical theory behind the models used
@@ -333,25 +335,25 @@ Before the LDA transformation:
 
 ```
 0.659 Random Forest · 200 estimators
-0.663 SVC · kernel='rbf' · gamma='scale' · C=1
+0.697 SVC · kernel='rbf' · gamma='0.1' · C=1.7
 0.506 Decision Tree · Entropy · max_depth=17 
 0.638 Knn · 8 neighbors
-0.573 MLP · hidden_layer_sizes=(8,8,8) · activation='relu' · solver='adam' · max_iter=3000
+0.642 MLP · hidden_layer_sizes=(20,20,20) · activation='tanh' · solver='adam' · 'learning_rate': 'adaptive'
 ```
 
 After the LDA transformation:
 
 ```
 0.679 Random Forest · 350 estimators
-0.700 SVC · kernel='rbf' · gamma='scale' · C=1
+0.700 SVC · kernel='rbf' · gamma='scale' · C=1 (did not change after parameter tuning but is 																									here for sake of comparison)
 0.560 Decision Tree · Entropy · max_depth=8 
 0.682 Knn · 28 neighbors
-0.629 MLP · hidden_layer_sizes=(8,8,8) · activation='relu' · solver='adam' · max_iter=3000
+0.654 MLP · hidden_layer_sizes=(20,20,20) · activation='tanh' · solver='adam' · 'learning_rate': 'adaptive'
 ```
 
 
 
-The MLP remained under the best default-parametrized models, with a accuracy of 65%. The SVC with rbf kernel, already the best one, improved even more, as described below.
+The MLP remained under the best default-parametrized models, with a accuracy of 65.4%. 
 
 
 
