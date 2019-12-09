@@ -183,7 +183,9 @@ It has two main hyper-parameters: C and gamma.
 
 **C** is a factor controlling the cost of misclassification on the training data. Therefore, a small C (C << 1) means a more simple model, allowing more misclassified entries but limiting the risk of over-fitting. On the contrary, a large C (C > 1) forces the model to explain strictly the entries by reaching a really low misclassification rate, potentially over-fitting. 
 
-**Gamma** is the parameter of the Gaussian radial basis function (1/2sigma² here). A very small gamma will constrain the model and cause a large variance, where a large gamma will lower the variance but raise the bias.
+**Gamma** is the parameter of the Gaussian radial basis function (1/2sigma² here). A very small gamma will constrain the model and cause a large variance, where a large gamma will lower the variance but raise the bias. In ``scikit-learn`, we also have the value `scale`  as a option for gamma, in which case, `gamma = 1 / (n_features * X.var())`.  
+
+
 
 ##### K-Nearest Neighbors (k-NN)
 
@@ -215,7 +217,7 @@ Each network layer has a specific function. The output layer receives stimuli fr
 
 All the models have been implemented using the `scikit-learn` library.
 
-To compare the models while using cross-validation, we used the `StratifiedKFold` function to generate the K-folds of the cross validation process. 
+To compare the models while using cross-validation, we used the `StratifiedKFold` function to generate the K-folds of the cross validation process, using 10 as the number of splits.
 
 To ensure the train and validation datasets are the same for each model, we set the `random_state` at a constant value for each comparison. 
 
@@ -236,11 +238,11 @@ This cross validation routine allows to compare the performance of the models, t
 
 This comparison gave a quick idea on the most adapted models for our problem.
 
-The next step is to choose the "apparently-best" of them, and tune their parameters to reach better performance.
+The next step is to choose the "apparently best" of them, and tune their parameters to reach better performance.
 
 ### Adjust of parameters
 
-Once the "apparently-best" model has been chosen, one would like to find the set of parameters that optimize the performance of the model for the problem we're dealing with. These parameters are in fact called *hyper-parameters*, in opposition to the parameters of the cost-function that are optimized during the learning process
+Once the "apparently best" model has been chosen, one would like to find the set of parameters that optimize the performance of the model for the problem we're dealing with. These parameters are in fact called *hyper-parameters*, in opposition to the parameters of the cost-function that are optimized during the learning process
 
 ## Results
 
@@ -285,7 +287,9 @@ With this plot, the separation between classes became more evident, even though 
 
 ### Results of the trained models
 
-Thanks to the cross validation routine, we could compare the performance of the models, tuned with simple parameters:
+Thanks to the cross validation routine, we could compare the performance of the models, first with the default parameters. The scores printed here are the accuracy scores of each model.
+
+The results for the dataset before the LDA transformation were:
 
 ```
 0.639 Random Forest · 100 estimators
@@ -302,13 +306,56 @@ Thanks to the cross validation routine, we could compare the performance of the 
 0.573 MLP · hidden_layer_sizes=(8,8,8) · activation='relu' · solver='adam' · max_iter=3000
 ```
 
-The scores printed here are the f1 scores of each model.
+The results for the dataset after the LDA transformation were:
 
-Given this first comparison, the model that seemed to work best with our data was the *SVC with rbf kernel*. We also were surprised by the low performance of the Multi-Layer Perceptron , and wanted to see if it could go better with more adapted parameters. 
+```
+0.668 Random Forest · 100 estimators
+0.660 Naive Bayes
+0.676 Logistic Regression · Solver:'sag'
+0.674 Linear SVM
+0.629 SVC · kernel='poly' · degree=2 · gamma='scale'
+0.700 SVC · kernel='rbf' · gamma='scale' · C=1
+0.635 SVC · kernel='sigmoid' · gamma='scale'
+0.506 Decision Tree 
+0.653 Knn · 5 neighbors
+0.661 Knn · 7 neighbors
+0.664 Knn · 9  neighbors
+0.629 MLP · hidden_layer_sizes=(8,8,8) · activation='relu' · solver='adam' · max_iter=3000
+```
 
-We applied a Grid Search to both models, and both improved their accuracy.
 
-The MLP remained under the best default-parametrized models, with a f1 score of 0.65. The SVC with rbf kernel, already the best one, improved even more.
+
+Given this first comparison, the model that seemed to work best with our data was the ***SVC with rbf kernel***. We were also surprised by the low performance of the Multi Layer Perceptron, and wanted to see if it could go better with tuned parameters. We applied a Grid Search to both SVC and MLP, and both improved their accuracy. For the other models, we tuned the parameters by iterating over a certain margin, and our parameter choices are explained in the next section for each model. 
+
+But first, we present here a table with the models that were modified by parameter tuning (not every model was tuned, because some didn't allow this possibility), and their results for both datasets, before and after the LDA transformation, while using the best parameters for each model. We only show here the models that have actually improved with the parameter tuning, because for example, the SVC with polynomial kernel and sigmoid kernel didn't improve by changing the parameters. 
+
+Before the LDA transformation:
+
+```
+0.659 Random Forest · 200 estimators
+0.663 SVC · kernel='rbf' · gamma='scale' · C=1
+0.506 Decision Tree · Entropy · max_depth=17 
+0.638 Knn · 8 neighbors
+0.573 MLP · hidden_layer_sizes=(8,8,8) · activation='relu' · solver='adam' · max_iter=3000
+```
+
+After the LDA transformation:
+
+```
+0.679 Random Forest · 350 estimators
+0.700 SVC · kernel='rbf' · gamma='scale' · C=1
+0.560 Decision Tree · Entropy · max_depth=8 
+0.682 Knn · 28 neighbors
+0.629 MLP · hidden_layer_sizes=(8,8,8) · activation='relu' · solver='adam' · max_iter=3000
+```
+
+
+
+The MLP remained under the best default-parametrized models, with a accuracy of 65%. The SVC with rbf kernel, already the best one, improved even more, as described below.
+
+
+
+### Comparison and discussion of the results
 
 #### Linear models
 
@@ -322,13 +369,15 @@ The Logistic Regression algorithm gave us an accuracy of 62.9% without the LDA a
 
 **Support Vector Machine (SVM) with linear kernel**
 
-The SVM with linear kernel algorithm gave us an accuracy of 65.1% without the LDA and 67.3% with the LDA. As expected, using a linear kernel, it has performed comparably to the Logistic Regression.
+The SVM with linear kernel algorithm gave us an accuracy of 65.0% without the LDA and 67.4% with the LDA. As expected, using a linear kernel, the SVM has performed comparably to the Logistic Regression.
+
+
 
 #### Non-linear models
 
 **Decision Tree**
 
-Our Decision tree had the lowest accuracy of all the algorithms we used, with 56.0% of accuracy with LDA and 50.8% without it. 
+Our Decision tree had the lowest accuracy of all the algorithms we used, with 56.0% of accuracy with LDA and 50.6% without it. 
 
 On the original dataset (before LDA transformation), the best parameters were maximum depth of 17 and Gini as criterion.
 
@@ -359,7 +408,7 @@ Without LDA, out best result was with 8 neighbors, providing an accuracy of 63.8
 
 **Support Vector Machine (SVM) with RBF (Gaussian) kernel**
 
-Using a grid search, we could find the best set of parameters C and gamma, and reached a 70% accuracy (68,6% without the LDA step).
+Using a grid search, we could find the best set of parameters C and gamma, and **reached a 70% accuracy** (68,6% without the LDA step). Abaixo segue um examplo do gráfico da GridSearch para o dataset original.
 
 ![](img/svm_parameters_grid_search.png)
 
@@ -369,11 +418,7 @@ Using a grid search, we could find the best set of parameters C and gamma, and r
 
 46.2% with gamma='scale' (original dataset)
 
-### Comparison and discussion of the results
 
-- "The best predicted genres are classical and hiphop while the worst predicted are jazz and rock" - Tzanetakis, George & Cook study (2002)
-
-  
 
 ## Conclusions
 
@@ -381,7 +426,7 @@ Using a grid search, we could find the best set of parameters C and gamma, and r
 
 - Few training examples
 - Classifications of genres are often arbitrary and controversial
-- The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where rock songs for example are more consistent between each other. This is certainly one of the reasons why the model has more ease to predict accurately rock songs than jazz ones.
+- The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where classical songs for example are more consistent between each other. This is certainly one of the reasons why the model has more ease to predict accurately classical songs than jazz ones. ("The best predicted genres are classical and hiphop while the worst predicted are jazz and rock" - Tzanetakis, George & Cook study (2002))
 
 ### What's the best model?
 

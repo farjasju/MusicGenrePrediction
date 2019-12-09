@@ -416,15 +416,15 @@ def main():
         'alpha': [0.0001, 0.05],
         'learning_rate': ['constant', 'adaptive'],
     }
-    mlp = MLPClassifier(hidden_layer_sizes=(
-        8, 8, 8), activation='relu', solver='adam', max_iter=3000, random_state=2)
+    mlp = MLPClassifier()
     classifier = GridSearchCV(mlp, parameter_space, n_jobs=7, cv=10)
-    title = title_generator(["MLP", "tweaked parameters (with a grid search)"])
+    params = classifier.fit(X_lda,y).best_params_
+    title = title_generator(["MLP", "tweaked parameters (with a grid search)", params])
     classifiers.append({'title': title, 'model': classifier})
 
     for classifier in classifiers:
         print(cross_validation(
-            classifier['model'], X_scaled, y), classifier['title'])
+            classifier['model'], X_lda, y), classifier['title'])
 
     ################################
 
