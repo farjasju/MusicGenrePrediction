@@ -6,7 +6,7 @@
 
 ![](img/intro.png)
 
-This project has a simple aim: **determine the genre of a song based only on its audio characteristics** (no meta-data). These characteristics are for example tempo, 
+This project has a simple aim: **determine the genre of a song based only on its audio characteristics** (using no meta-data - like year or lyrics). These characteristics are for example tempo, beats, spectral bandwith, Short Time Fourier Transform...
 
 This problem is a *classification* problem: for each song, we need to attribute a class (a genre). Today, classification problems are solved using *machine learning* approaches, which have proved to be quite successful in extracting trends and patterns from large datasets. More specifically, our problem is a *supervised* classification problem: the model will learn from labeled data (i.e. each example song has a determined genre associated to it).
 
@@ -18,9 +18,9 @@ The whole project is and relies on **open source code**.
 
 Genre classification is widely used these days, and there are already many studies on the subject. Here are the most similar to ours:
 
-- Well-known study using a similar dataset, but with no real machine learning technique: Tzanetakis, George & Cook, Perry. (2002). *Musical Genre Classification of Audio Signals*. IEEE Transactions on Speech and Audio Processing. 10. 293 - 302. 10.1109/TSA.2002.800560
+- Well-known but rather old, this study is using a similar dataset, but doesn't implement real machine learning techniques: Tzanetakis, George & Cook, Perry. (2002). *Musical Genre Classification of Audio Signals*. IEEE Transactions on Speech and Audio Processing. 10. 293 - 302. 10.1109/TSA.2002.800560
 - Using this very dataset, a study was made on this [github repository](https://github.com/Insiyaa/Music-Tagging), achieving a 63% accuracy.
-- Out of the 4 public kernels on Kaggle that used this dataset, the best result had 66% accuracy (https://www.kaggle.com/luiscesar/svm-music-classification). 
+- Out of the 4 public kernels on Kaggle that used this dataset, the best result achieved a 66% accuracy (https://www.kaggle.com/luiscesar/svm-music-classification). 
   
 
 ## Dataset & tools
@@ -497,8 +497,6 @@ For the LDA, the best result we achieved (70%) was with gamma='0.001', which is 
 
 46.2% with gamma='scale' (original dataset)
 
-
-
 **Multi Layer Perceptron**
 
 The MLP remained under the best default-parametrized models, with a accuracy of 65.4% for the LDA-transformed dataset and 64.2% for the original dataset. 
@@ -509,9 +507,13 @@ The MLP remained under the best default-parametrized models, with a accuracy of 
 
 ### Discussion on the characteristics of the problem
 
-- Few training examples
-- Classifications of genres are often arbitrary and controversial
-- The prediction is based exclusively on spectral and rhythm characteristics of the songs - is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where classical songs for example are more consistent between each other. This is certainly one of the reasons why the model has more ease to predict accurately classical songs than jazz ones. ("*The best predicted genres are classical and hip-hop while the worst predicted are jazz and rock*" - Tzanetakis, George & Cook study (2002))
+The problem we deal with here faces several difficulties, presented in the following.
+
+The main limiting characteristic of our problem is the number of songs in the dataset, and thus the number of training examples. 1000 songs for a 10-genre classification - that is 100 songs per genre - is really few, and obviously not enough to learn accurate parameters.
+
+Another aspect of the problem is the arbitrary and controversial side of genre classifications in general. Many genres aren't precisely defined or include a really broad scale of styles, and the definition of such genres is by itself a discussed subject. Therefore, the accuracy of an automatic genre classification method may be difficult to evaluate.
+
+Also, the predictions made in our study are based exclusively on spectral and rhythm characteristics of the songs. Is it enough to determine a genre? Jazz songs for instance have many different tonalities and rhythms, where classical songs for example are more consistent between each other. This is certainly one of the reasons why the model has more ease to predict accurately classical songs than jazz ones. ("*The best predicted genres are classical and hip-hop while the worst predicted are jazz and rock*" - Tzanetakis, George & Cook study (2002))
 
 ### What's the best model?
 
@@ -519,7 +521,9 @@ The **SVM with rbf kernel**, tuned with optimal parameters, reached the best per
 
 ### Possible improvements
 
-- subgenres (hierarchical structure)
+One of the biggest flaws of this study is the lack of songs in the dataset. This could be solved using [libROSA](https://librosa.github.io/librosa/) library to generate the features needed from a new set of songs, that would be added to the original dataset. The main difficulty remains to find a large quantity of songs, equally distributed (the same number of songs for each genre).
+
+Along with a bigger dataset, one could have a broader set of genres, and add some missing styles (electronic music, regional music genres, etc). An even further improvement could be the use of *subgenres*, that is using a hierarchical structure of genres: for instance, the genre *jazz* would be subdivided in *acid jazz, jazz-funk, jazz fusion*...
 
 ------
 
